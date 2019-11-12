@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+ .ui-paginator a {
+        margin-right: 5px;
+    }
+    
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+
+body .ui-selectonemenu-panel .ui-selectonemenu-filter-container .ui-selectonemenu-filter.ui-inputfield{
+width : 320px !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmAsisP">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Asistencias Presenciales</h1>
+	                   	           						<p:growl id="msgs" showDetail="true" />
+	                   
+						<p:dataTable id="tblAsisP" var="asist" rowKey="#{asist.idAssip}"
+							value="#{asistenciaTecController.lstAsisTec}" widgetVar="wgTipolocal"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="false" rows="5"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							selectionMode="single"
+							selection="#{asistenciaTecController.selectItemsAdm}"
+                            >						
+						<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-left:0px !important; text-align:left;">
+										<p:commandButton
+											icon="fa fa-refresh"
+											value="Actualizar Lista"
+											style="width: 200px;"
+											oncomplete="PF('wgTipolocal').filter()" />
+										<p:spacer width="30" />
+										<h:outputText value="Buscar (*): " />
+										<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px"
+												 />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+								            value="Buscar por descripción" />
+											<p:commandButton onclick="PF('wgTipolocal').filter()"
+												icon="pi pi-search" />
+										<p:spacer width="5" />
+										<p:commandButton
+											onclick="PF('wgTipolocal').clearFilters()"
+											icon="pi pi-ban" />
+									</p:outputPanel>
+								</div>
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-rigth:0px !important;text-align:right;">
+										<p:commandButton value="Añadir Asistencias Presenciales"
+												actionListener="#{asistenciaTecController.resetearUser}"
+												update="frmBuscarAsisP"
+												onclick="PF('WGBuscarAsisP').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{asistenciaTecController.habilitarUser}"
+												onclick="PF('WGBuscarAsisP').show();"
+												update="frmBuscarAsisP" process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{asistenciaTecController.deleteAdmin}" update="tblAsisP" />
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarAsisP').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+										<p:spacer width="20" />
+										
+									</p:outputPanel>
+								</div>
+							</div>
+					    </f:facet>
+					    <p:ajax event="rowSelect"
+								listener="#{asistenciaTecController.selectedAdm}"
+								update=":frmAsisP:msgs,frmBuscarAsisP" />
+							<p:column headerText="Entidad" filterBy="#{asist.representantName}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.representantName}" />
+							</p:column>
+							<p:column headerText="Implantador" filterBy="#{asist.representantEmail}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.representantEmail}" />
+							</p:column>
+							<p:column headerText="Sistema" filterBy="#{asist.representantWorkingPosition}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.representantWorkingPosition}" />
+							</p:column>
+							<p:column headerText="Tipo de Atención" filterBy="#{asist.typeAttention}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.typeAttention eq '1' ? 'Programada' : 'Solicitada'}" />
+							</p:column>
+							<p:column headerText="Coordinate(Y)" filterBy="#{asist.coordinateY}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.coordinateY}" />
+							</p:column>
+							<p:column headerText="Coordinate(X)" filterBy="#{asist.coordinateX}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.coordinateX}" />
+							</p:column>
+							<p:column headerText="F.Envio" filterBy="#{asist.arrivalDate}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.arrivalDate}" />
+							</p:column>
+							<p:column headerText="Llegada" filterBy="#{asist.departureDate}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.arrivalDate}" />
+							</p:column>
+							<p:column headerText="Hora Inicio" filterBy="#{asist.assistanceStartTime}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.assistanceStartTime}" />
+							</p:column>
+							<p:column headerText="Hora Fin" filterBy="#{asist.assistanceEndTime}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.assistanceEndTime}" />
+							</p:column>
+							<p:column headerText="Representante" filterBy="#{asist.representantName}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.representantName}" />
+							</p:column>
+							<p:column headerText="Cargo" filterBy="#{asist.representantWorkingPosition}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.representantWorkingPosition}" />
+							</p:column>
+							<p:column headerText="Via" filterBy="#{asist.assistanceType}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.assistanceType eq '1' ? 'Web' : 'Movil'}" />
+							</p:column>
+							<p:column headerText="Acciones">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarAsisP').show()" icon="pi pi-eye"
+									update=":frmAsisP:tblAsisP,frmBuscarAsisP">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{asistenciaTecController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarTipoLo" header="Añadir Asistencia Presencial"
+				widgetVar="WGBuscarAsisP" appendTo="@(body)" modal="true"
+				width="650" height="550" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarAsisP">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					
+						<h:panelGrid columns="2">	 
+						<p:outputLabel value="Entidad" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:350px" panelStyle="width:350px" filter="true" filterMatchMode="startsWith"
+								value="#{asistenciaTecController.userBean.unitid}" disabled="#{asistenciaTecController.disabledUser}" >
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="uni"
+									value="#{asistenciaTecController.lstEntidad}"
+									itemLabel="#{uni.unitName}" itemValue="#{uni.id}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Representante" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{asistenciaTecController.userBean.representantName}" style="width:350px;" readonly="#{asistenciaTecController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Cargo" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{asistenciaTecController.userBean.representantWorkingPosition}" style="width:350px;" readonly="#{asistenciaTecController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Teléfono de Representante" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{asistenciaTecController.userBean.phoneNumber}" style="width:350px;" readonly="#{asistenciaTecController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Correo de Representante" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{asistenciaTecController.userBean.representantEmail}" style="width:350px;" readonly="#{asistenciaTecController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Tipo de Atención" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu
+									value="#{asistenciaTecController.userBean.typeAttention}"
+									style="width:180px" disabled="#{asistenciaTecController.disabledUser}">
+									<f:selectItem itemLabel="Seleccione" itemValue="0" />
+									<f:selectItem itemLabel="Programada" itemValue="1" />
+									<f:selectItem itemLabel="Solicitada" itemValue="2" />
+								</p:selectOneMenu>
+					    <p:outputLabel value="Tipo de local" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:180px"
+								value="#{asistenciaTecController.userBean.localType}" disabled="#{asistenciaTecController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{asistenciaTecController.lstTipoLoc}"
+									itemLabel="#{depa.tipoLocal}" itemValue="#{depa.idTipoLocal}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Hora Inicio" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:calendar value="#{asistenciaTecController.userBean.horaIni}"
+									 pattern="HH:mm" timeOnly="true" disabled="#{asistenciaTecController.disabledUser}"></p:calendar>
+						<p:outputLabel value="Hora Fin" styleClass="ui-label-text2"></p:outputLabel>    
+					<p:calendar value="#{asistenciaTecController.userBean.horaFin}"
+									 pattern="HH:mm" timeOnly="true" disabled="#{asistenciaTecController.disabledUser}"></p:calendar>
+						<p:outputLabel value="Descripcion" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{asistenciaTecController.userBean.assistanceDescription}" readonly="#{asistenciaTecController.disabledUser}" style="width:350px;"></p:inputText>
+						<p:outputLabel value="Recomendación" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{asistenciaTecController.userBean.recomendacion}" readonly="#{asistenciaTecController.disabledUser}" style="width:350px;"></p:inputText>
+						<p:outputLabel value="Sistema" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:180px"
+								value="#{asistenciaTecController.userBean.system_id}" disabled="#{asistenciaTecController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{asistenciaTecController.lstTipoSis}"
+									itemLabel="#{depa.tipoSistema}" itemValue="#{depa.idTiposis}" />
+						</p:selectOneMenu>
+						</h:panelGrid>
+						<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{asistenciaTecController.evaluarMetodo}"
+								process="frmBuscarAsisP"
+								 global="false"
+								update=":frmAsisP:tblAsisP" onclick="PF('WGBuscarAsisP').hide();" ></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;"></p:commandButton>
+							
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

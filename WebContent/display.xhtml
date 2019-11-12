@@ -1,0 +1,374 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es" >
+
+<f:view >
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px; ">
+			<ui:include src="WEB-INF/topbar.xhtml"/>
+			<div class="ui-g-12">
+				<div class="card" style="height: 100%">
+					<p:outputLabel  styleClass="card-title" value="CONTROL DE EQUIPOS MSU-DISPLAY"/>
+					<p:separator  styleClass="card-title" />
+					<h:form id="frmDisplay">
+					<p:dataTable
+						id="dtbDisplay" 
+						var="display" 
+						value="#{displayController.listDisplay}"
+						widgetVar="wgvListdisplay"
+						filteredValue="#{displayController.filterListDisplay}"
+						style="text-align: center;"
+						rows="50"
+						paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowIndexVar="index"
+						rowsPerPageTemplate="50,100,150"
+						paginatorPosition="bottom"
+						emptyMessage="0 registros...!!!">
+						<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-left:0px !important; text-align:left;">
+										<p:commandButton
+											icon="fa fa-refresh"
+											value="Actualizar Lista"
+											style="width: 200px;"
+											actionListener="#{displayController.init}"
+											update=":frmDisplay:dtbDisplay :frmMessages:messages"
+											oncomplete="PF('wgvListdisplay').filter()" />
+										<p:spacer width="30" />
+										<h:outputText value="Buscar (*): " />
+										<p:spacer width="5" />
+										<p:inputText
+											id="globalFilter"
+											style="width:180px"
+											placeholder="Ingrese un ID" />
+										<p:spacer width="10px" />
+										<p:commandButton
+											onclick="PF('wgvListdisplay').filter()"
+											icon="pi pi-search" /> 
+										<p:spacer width="5" />
+										<p:commandButton
+											onclick="PF('wgvListdisplay').clearFilters()"
+											icon="pi pi-ban" />
+									</p:outputPanel>
+								</div>
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-rigth:0px !important;text-align:right;">
+										<p:commandButton
+											icon="fa fa-plus"
+											value="Nuevo Display"
+											oncomplete="PF('wgvNewDisplay').show();"
+											title="Nuevo GPS"
+											style="margin-right:0px; bottom:5px; width:auto;"
+											actionListener="#{displayController.voidNewDisplay}"
+											update=":frmNewDisplay:oppNewDisplay :frmMessages:messages"/>
+										<p:spacer width="20" />
+										
+										<h:commandLink>
+											<p:graphicImage
+												url="/images/excel.png"
+												width="24" />
+											<p:dataExporter
+												type="xls"
+												target="dtbDisplay"
+												fileName="Display" />
+										</h:commandLink>
+										<p:spacer width="20" />
+										
+									</p:outputPanel>
+								</div>
+							</div>
+					    </f:facet>
+						
+					
+					    <p:column headerText="DISPLAYID *" width="100"
+					   			filterBy="#{display.displayID}"
+								filterStyle="display: none; visibility: hidden;">
+								<h:outputText value="#{display.displayID}" /></p:column>
+					    <p:column  style="white-space:nowrap; text-align:left;"
+					    	 filterBy="#{display.accountID}" filterMatchMode="exact">
+				            <f:facet name="filter">
+				                <p:selectOneMenu 
+									onchange="PF('wgvListdisplay').filter()"
+									style="width:170px;"
+									label="Cuenta"
+									scrollHeight="150" >
+									<f:selectItem itemLabel="Todas las cuentas" itemValue="#{null}" noSelectionOption="true"/>
+									<f:selectItems
+										value="#{displayController.listAccount}"
+										var="account"
+										itemValue="#{account.accountID}"
+										itemLabel="#{account.uniqueID} - #{account.bussinessName}" />
+								</p:selectOneMenu>
+				            </f:facet><h:outputText value="#{display.bussinessName}" /></p:column>
+					    <p:column headerText="Ruta" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.routerName}" /></p:column>
+					    <p:column headerText="Vehiculo" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.vehicleName}" /></p:column>
+					    <p:column headerText="Series" width="150"><h:outputText value="#{display.series}" /></p:column>
+					    <p:column headerText="Tipo" width="140" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.brand}" /></p:column>
+					    <p:column headerText="SIM" width="90"><h:outputText value="#{display.sim}" /></p:column>
+					    <p:column headerText="AppVersion" width="70"><h:outputText value="#{display.appVersion}" /></p:column>
+					    <p:column headerText="Recepción" width="100"><h:outputText value="#{display.deliveryDateTxt}" /></p:column>
+					    <p:column headerText="Creación" width="120"><h:outputText value="#{display.creationTimeTxt}" /></p:column>
+					    <p:column headerText="Actualizado" width="120"><h:outputText value="#{display.lastUpdateTimeTxt}" /></p:column>
+						<p:column
+							headerText="Accciones"
+							style="width:80px;"
+							exportable="false">
+							<h:panelGrid
+								columns="3"
+								styleClass="bordernone">
+								<p:commandLink
+									update=":frmViewDisplay:oppViewDisplay :frmMessages:messages"
+									actionListener="#{displayController.selectDisplayID(display.displayID)}"
+									oncomplete="PF('wgvViewDisplay').show();"
+									title="Mostrar">
+									<i class="pi pi-search"></i>
+								</p:commandLink>
+								<p:commandLink
+									update=":frmEditDisplay:oppEditDisplay :frmMessages:messages"
+									actionListener="#{displayController.voidEditDisplay(display.displayID)}"
+									oncomplete="PF('wgvEditDisplay').show();"
+									title="Editar Display">
+									<i class="pi pi-pencil"></i>
+								</p:commandLink>
+							</h:panelGrid>
+						</p:column>
+					</p:dataTable>
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<h:form id="frmNewDisplay">
+			<p:dialog header="Nuevo Dispositivo Display-MSU"
+				widgetVar="wgvNewDisplay" resizable="false"
+				id="dlgNewDisplay" showEffect="fade" hideEffect="clip" modal="true">
+				<p:outputPanel id="oppNewDisplay">
+					<h:panelGrid columns="3" cellpadding="5">
+						<p:outputLabel for="txtesn" style="font-weight: bold;" value="Serie:"/>
+						<p:inputText id="txtesn" value="#{displayController.selectDisplay.series}" required="true" size="22" />
+						<p:message for="txtesn" display="icon" />
+						
+						<p:outputLabel for="txtdisplayTypeID" style="font-weight: bold;" value="Tipo de Display:"/>
+						<p:inputText id="txtdisplayTypeID" value="#{displayController.selectDisplay.brand}" required="true" size="22" />
+						<p:message for="txtdisplayTypeID" display="icon" />
+						
+						<p:outputLabel for="txtaccountID" style="font-weight: bold;" value="Cuenta Asignada:"/>
+						<p:selectOneMenu id="txtaccountID" value="#{displayController.selectDisplay.accountID}" effect="fade" required="true" style="width: 420px;">
+							<p:ajax
+								listener="#{displayController.onAccountChangeNew}"
+								update="txtvehicleID :frmMessages:messages" />
+							<f:selectItem itemLabel="Elija la cuenta..." itemValue="-1" noSelectionOption="true" />
+							<f:selectItems value="#{displayController.listAccount}" 
+											var="account" itemLabel="#{account.bussinessName}" itemValue="#{account.accountID}" />
+						</p:selectOneMenu>
+						<p:message for="txtaccountID" display="icon" />
+						
+						<p:outputLabel for="txtvehicleID" style="font-weight: bold;" value="Vehiculo Asignado:"/>
+						<p:selectOneMenu id="txtvehicleID" value="#{displayController.selectDisplay.vehicleID}" effect="fade" 
+										filter="true" filterMatchMode="contains" style="width: 200px;">
+							<f:selectItem itemLabel="Elija al vehiculo..." itemValue="-1" />
+							<f:selectItems value="#{displayController.listVehicle}" 
+											var="vehicle" itemLabel="#{vehicle.vehicleName}" itemValue="#{vehicle.vehicleID}" />
+						</p:selectOneMenu>
+						<p:message for="txtvehicleID" display="icon" />
+						
+						<p:outputLabel for="txtchipID" style="font-weight: bold;" value="Chip Asignado:"/>
+						<p:selectOneMenu id="txtchipID" value="#{displayController.selectDisplay.chipID}" effect="fade" 
+										filter="true" filterMatchMode="contains" style="width: 200px;">
+							<f:selectItem itemLabel="Elija al Chip..." itemValue="-1" />
+							<f:selectItems value="#{displayController.listChip}" 
+											var="chip" itemLabel="#{chip.sim}" itemValue="#{chip.chipID}" />
+						</p:selectOneMenu>
+						<p:message for="txtchipID" display="icon" />
+						
+						<p:outputLabel for="txtunlockPassword" style="font-weight: bold;" value="UnlockPassword:"/>
+						<p:inputText id="txtunlockPassword" value="#{displayController.selectDisplay.unlockPassword}" required="true" size="22" />
+						<p:message for="txtunlockPassword" display="icon" />
+						
+						<p:outputLabel for="txtunlockPasswordSetting" style="font-weight: bold;" value="UnlockPasswordSetting:"/>
+						<p:inputText id="txtunlockPasswordSetting" value="#{displayController.selectDisplay.unlockPasswordSetting}" required="true" size="22" />
+						<p:message for="txtunlockPasswordSetting" display="icon" />
+						
+						<p:outputLabel for="txtgift" style="font-weight: bold;" value="Nro. Tick. Premiado:"/>
+						<p:inputText id="txtgift" value="#{displayController.selectDisplay.gift}" required="true" size="5" />
+						<p:message for="txtgift" display="icon" />
+						
+						<p:outputLabel for="txtdeliveryDate" style="font-weight: bold;" value="Recepcionado el:"/>
+						<p:calendar id="txtdeliveryDate" value="#{displayController.selectDisplay.deliveryDateChange}" showOn="button" pattern="dd-MM-yyyy" />
+						<p:spacer />
+						
+					</h:panelGrid>
+					<p:separator></p:separator>
+					<h:panelGrid
+						columns="2"
+						style="  float:right;">
+						<p:commandButton
+							value="Grabar"
+							actionListener="#{displayController.voidSaveNewDisplay}"
+							update=":frmDisplay:dtbDisplay :frmMessages:messages"
+							oncomplete="PF('wgvListdisplay').filter()" >
+						</p:commandButton>
+						<p:commandButton
+							value="Cancelar"
+							onclick="PF('wgvNewDisplay').hide();" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+		<h:form id="frmEditDisplay">
+			<p:dialog header="Editar Dispositivo GPS"
+				widgetVar="wgvEditDisplay" resizable="false"
+				id="dlgEditDisplay" showEffect="fade" hideEffect="clip" modal="true">
+				<p:outputPanel id="oppEditDisplay">
+					<h:panelGrid columns="3" cellpadding="5">
+						<p:outputLabel style="font-weight: bold;" value="DISPLAY ID:"/>
+						<p:outputLabel value="#{displayController.selectDisplay.displayID}"/>
+						<p:spacer />
+
+						<p:outputLabel for="txtseries" style="font-weight: bold;" value="Serie:"/>
+						<p:inputText id="txtseries" value="#{displayController.selectDisplay.series}" required="true" size="22" />
+						<p:message for="txtseries" display="icon" />
+						
+						<p:outputLabel for="txtdisplayTypeID" style="font-weight: bold;" value="Tipo de Display:"/>
+						<p:inputText id="txtdisplayTypeID" value="#{displayController.selectDisplay.brand}" required="true" size="22" />
+						<p:message for="txtdisplayTypeID" display="icon" />
+
+						<p:outputLabel for="txtaccountID" style="font-weight: bold;" value="Cuenta Asignada:"/>
+						<p:selectOneMenu id="txtaccountID" value="#{displayController.selectDisplay.accountID}" effect="fade" required="true" style="width: 420px;">
+							<p:ajax
+								listener="#{displayController.onAccountChangeNew}"
+								update="txtvehicleID :frmMessages:messages" />
+							<f:selectItem itemLabel="Elija la cuenta..." itemValue="-1" noSelectionOption="true" />
+							<f:selectItems value="#{displayController.listAccount}" 
+											var="account" itemLabel="#{account.bussinessName}" itemValue="#{account.accountID}" />
+						</p:selectOneMenu>
+						<p:message for="txtaccountID" display="icon" />
+						
+						<p:outputLabel for="txtvehicleID" style="font-weight: bold;" value="Vehiculo Asignado:"/>
+						<p:selectOneMenu id="txtvehicleID" value="#{displayController.selectDisplay.vehicleID}" effect="fade" 
+										filter="true" filterMatchMode="contains" style="width: 200px;">
+							<f:selectItem itemLabel="Elija al vehiculo..." itemValue="-1" />
+							<f:selectItems value="#{displayController.listVehicle}" 
+											var="vehicle" itemLabel="#{vehicle.vehicleName}" itemValue="#{vehicle.vehicleID}" />
+						</p:selectOneMenu>
+						<p:message for="txtvehicleID" display="icon" />
+						
+						<p:outputLabel for="txtchipID" style="font-weight: bold;" value="Chip Asignado:"/>
+						<p:selectOneMenu id="txtchipID" value="#{displayController.selectDisplay.chipID}" effect="fade" 
+										filter="true" filterMatchMode="contains" style="width: 200px;">
+							<f:selectItem itemLabel="Elija al Chip..." itemValue="-1" />
+							<f:selectItems value="#{displayController.listChip}" 
+											var="chip" itemLabel="#{chip.sim}" itemValue="#{chip.chipID}" />
+						</p:selectOneMenu>
+						<p:message for="txtchipID" display="icon" />
+						
+						<p:outputLabel for="txtunlockPassword" style="font-weight: bold;" value="UnlockPassword:"/>
+						<p:inputText id="txtunlockPassword" value="#{displayController.selectDisplay.unlockPassword}" required="true" size="22" />
+						<p:message for="txtunlockPassword" display="icon" />
+						
+						<p:outputLabel for="txtunlockPasswordSetting" style="font-weight: bold;" value="UnlockPasswordSetting:"/>
+						<p:inputText id="txtunlockPasswordSetting" value="#{displayController.selectDisplay.unlockPasswordSetting}" required="true" size="22" />
+						<p:message for="txtunlockPasswordSetting" display="icon" />
+						
+						<p:outputLabel for="txtgift" style="font-weight: bold;" value="Nro. Tick. Premiado:"/>
+						<p:inputText id="txtgift" value="#{displayController.selectDisplay.gift}" required="true" size="5" />
+						<p:message for="txtgift" display="icon" />
+						
+						<p:outputLabel for="txtdeliveryDate" style="font-weight: bold;" value="Recepcionado el:"/>
+						<p:calendar id="txtdeliveryDate" value="#{displayController.selectDisplay.deliveryDateChange}" showOn="button" pattern="dd-MM-yyyy" />
+						<p:spacer />
+
+					</h:panelGrid>
+					<p:separator></p:separator>
+					<h:panelGrid
+						columns="2"
+						style="  float:right;">
+						<p:commandButton
+							value="Grabar"
+							actionListener="#{displayController.voidSaveEditDisplay}"
+							update=":frmDisplay:dtbDisplay :frmMessages:messages"
+							oncomplete="PF('wgvListdisplay').filter()" >
+						</p:commandButton>
+						<p:commandButton
+							value="Cancelar"
+							onclick="PF('wgvEditDisplay').hide();" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+		<h:form id="frmViewDisplay">
+			<p:dialog header="Ver Historial del DISPLAY"
+				widgetVar="wgvViewDisplay" resizable="false" width="1000"
+				id="dlgViewDisplay" showEffect="fade" hideEffect="clip" modal="true">
+				<p:outputPanel id="oppViewDisplay">
+					<div class="ui-g">
+						<div class="ui-g-6">
+							<h:panelGrid columns="2" cellpadding="5">
+								<p:outputLabel style="font-weight: bold;" value="DisplayID:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.displayID}"/>
+								<p:outputLabel style="font-weight: bold;" value="Tipo Display:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.brand}"/>
+								<p:outputLabel style="font-weight: bold;" value="Cuenta Asignada:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.bussinessName}"/>
+								<p:outputLabel style="font-weight: bold;" value="Chip Asignado:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.sim}"/>
+								<p:outputLabel style="font-weight: bold;" value="AppVersion:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.appVersion}"/>
+							</h:panelGrid>
+						</div>
+						<div class="ui-g-6">
+							<h:panelGrid columns="2" cellpadding="5">
+								<p:outputLabel style="font-weight: bold;" value="Nro. de Serie:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.series}"/>
+								<p:outputLabel style="font-weight: bold;" value="Ruta Asignada:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.routerName}"/>
+								<p:outputLabel style="font-weight: bold;" value="Vehiculo Asignado:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.vehicleName}"/>
+								<p:outputLabel style="font-weight: bold;" value="Recepcionado el:"/>
+								<p:outputLabel value="#{displayController.selectDisplay.deliveryDateTxt}"/>
+							</h:panelGrid>
+						</div>
+					</div>
+					
+					<p:dataTable
+						id="dtbViewDisplay" 
+						var="display" 
+						value="#{displayController.listHistoryDisplay}"
+						style="text-align: center;"
+						rowIndexVar="index"
+						scrollable="true" scrollHeight="200"
+						emptyMessage="0 registros...!!!">
+						<p:column headerText="Cuenta Anterior" width="220" style="white-space:nowrap; text-align:left;"><h:outputText value="#{display.bussinessNameOld}" /></p:column>
+						<p:column headerText="Cuenta Actual" width="220" style="white-space:nowrap; text-align:left;"><h:outputText value="#{display.bussinessName}" /></p:column>
+					    <p:column headerText="Vehiculo Anterior" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.vehicleNameOld}" /></p:column>
+					    <p:column headerText="Vehiculo Actual" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.vehicleName}" /></p:column>
+					    <p:column headerText="SIM Anterior" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.simOld}" /></p:column>
+					    <p:column headerText="SIM Actual" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.sim}" /></p:column>
+					    <p:column headerText="Serie Anterior" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.seriesOld}" /></p:column>
+					    <p:column headerText="Serie Actual" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.series}" /></p:column>
+					    <p:column headerText="Tipo Anterior" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.brandOld}" /></p:column>
+					    <p:column headerText="Tipo Actual" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.brand}" /></p:column>
+					    <p:column headerText="Realizado el" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.creationTimeTxt}" /></p:column>
+					    <p:column headerText="usuario" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{display.userName}" /></p:column>
+					</p:dataTable>
+					<p:separator></p:separator>
+					<h:panelGrid
+						columns="2"
+						style="float:right;">
+						<p:spacer />
+						<p:commandButton
+							value="Cerrar"
+							onclick="PF('wgvViewDisplay').hide();" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+</h:body>
+</f:view>
+</html>

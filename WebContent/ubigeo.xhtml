@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+ .ui-paginator a {
+        margin-right: 5px;
+    }
+    
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmUbigeo">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 36px;">Ubigeo</h1>
+	                    <div style="float : right; ">
+	                    <p:commandButton value="Añadir Ubigeo" onclick="PF('WGBuscarAdm').show();" icon="pi pi-plus"></p:commandButton>
+	                    <p:commandButton value="Exportar" onclick="PF('WGBuscarAdm').show();" icon="pi pi-file"></p:commandButton>
+	                    <p:commandButton value="imprimir" onclick="PF('WGBuscarAdm').show();" icon="pi pi-print"></p:commandButton>
+	                    
+	                    </div>
+						<p:commandButton value="Buscar" onclick="PF('WGBuscarUbi').show();" icon="pi pi-search"></p:commandButton>
+						<br /> <br />
+						<p:dataTable id="tblUbi" var="asist"
+							value=""
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="true" rows="5"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							currentPageReportTemplate="Página {currentPage} de {totalPages} | Mostrando Registros del {startRecord} al {endRecord} de un Total de {totalRecords}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15"
+							emptyMessage="Ningun Registro encontrado."
+                            >											
+							<p:column headerText="Ubigeo id">
+								<h:outputText value="" />
+							</p:column>
+
+							<p:column headerText="Ubigeo departamento" style="width: 75px">
+								<h:outputText value="" style="width: 75px" />
+							</p:column>
+
+							<p:column headerText="Ubigeo provincia">
+								<h:outputText value="" />
+							</p:column>
+
+							<p:column headerText="Ubigeo distrito">
+								<h:outputText
+									value="" />
+							</p:column>
+							<p:column headerText="Acciones">
+								<h:outputText value="" />
+							</p:column>
+							
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarUbi" header="Buscar Ubigeo"
+				widgetVar="WGBuscarUbi" appendTo="@(body)" modal="true"
+				width="700" height="400" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarUbi">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					
+						<h:panelGrid columns="2">	 
+						<p:outputLabel value="Ubigeo id" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value=""></p:inputText>
+						<p:outputLabel value="Ubigeo departamento" styleClass="ui-label-text2" ></p:outputLabel>    
+						    
+						<p:inputText
+								value="" style="width:350px;"></p:inputText>
+								<p:outputLabel value="Ubigeo provincia" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value=""></p:inputText>
+								<p:outputLabel value="Ubigeo distrito" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value=""></p:inputText>		
+						<p:outputLabel value="Acciones" styleClass="ui-label-text2"></p:outputLabel>	   
+							
+							<p:commandButton value="Ejecutar Filtro" 
+								></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

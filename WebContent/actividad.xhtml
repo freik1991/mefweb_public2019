@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui-paginator a {
+	margin-right: 5px;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+			<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmTipoue">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Otras Actividades</h1>
+						<p:growl id="msgs" showDetail="true" />
+
+						<p:dataTable id="tblTipoue" var="asist" widgetVar="wgTipoue"
+							value="#{actividadController.lstAdm}" rowIndexVar="rowIndex"
+							tableStyle="table-layout: auto;" paginator="false" rows="10"
+							rowKey="#{asist.idAct}"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							emptyMessage="Ningun Registro encontrado." selectionMode="single"
+							selection="#{actividadController.selectItemsAdm}">
+							<f:facet name="header">
+								<div class="ui-g">
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-left:0px !important; text-align:left;">
+											<p:commandButton icon="fa fa-refresh"
+												value="Actualizar Lista" style="width: 200px;"
+												oncomplete="PF('wgTipoue').filter()" />
+											<p:spacer width="30" />
+											<h:outputText value="Buscar (*): " />
+											<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px" />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+												value="Buscar por descripción" />
+											<p:commandButton onclick="PF('wgTipoue').filter()"
+												icon="pi pi-search" />
+											<p:spacer width="5" />
+											<p:commandButton onclick="PF('wgTipoue').clearFilters()"
+												icon="pi pi-ban" />
+										</p:outputPanel>
+									</div>
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-rigth:0px !important;text-align:right;">
+											<p:commandButton value="Añadir Actividad"
+												actionListener="#{actividadController.resetearUser}"
+												update="frmBuscarTipoUe"
+												onclick="PF('WGBuscarTipoUe').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{actividadController.habilitarUser}"
+												onclick="PF('WGBuscarTipoUe').show();"
+												update="frmBuscarTipoUe" process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{actividadController.deleteAdmin}" update="tblTipoue" />
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarTipoUe').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+											<p:spacer width="20" />
+
+										</p:outputPanel>
+									</div>
+								</div>
+							</f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{actividadController.selectedAdm}"
+								update=":frmTipoue:msgs,frmBuscarTipoUe" />
+							<p:column headerText="Implantador" style="width: 1400PX;"
+								filterBy="#{asist.implanted_name}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.implanted_name}" />
+							</p:column>
+							<p:column headerText="Sistema" style="width: 1400PX;"
+								filterBy="#{asist.systemName}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.systemName}" />
+							</p:column>
+							<p:column headerText="Motivo" style="width: 1400PX;"
+								filterBy="#{asist.title}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.titulo}" />
+							</p:column>
+							<p:column headerText="Fecha de Actividad" style="width: 1400PX;"
+								filterBy="#{asist.activitieDate}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.activitieDate}" />
+							</p:column>
+							<p:column headerText="Comentario" style="width: 1400PX;"
+								filterBy="#{asist.comment}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.comment}" />
+							</p:column>
+							<p:column headerText="Acciones">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarTipoUe').show()" icon="pi pi-eye"
+									update=":frmTipoue:tblTipoue,frmBuscarTipoUe">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{actividadController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarTipoUe" header="Actividad"
+				widgetVar="WGBuscarTipoUe" appendTo="@(body)" modal="true"
+				width="650" height="370" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarTipoUe">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+
+						<h:panelGrid columns="2" cellpadding="4">
+						<p:outputLabel value="Implantador" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:180px"
+								value="#{actividadController.userBean.implId}" disabled="#{actividadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{actividadController.lstImp}"
+									itemLabel="#{depa.nameImp}" itemValue="#{depa.idImpl}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Sistema" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:180px"
+								value="#{actividadController.userBean.systemId}" disabled="#{actividadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{actividadController.lstTipoSis}"
+									itemLabel="#{depa.tipoSistema}" itemValue="#{depa.idTiposis}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Motivo" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:180px"
+								value="#{actividadController.userBean.idMot}" disabled="#{actividadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{actividadController.lstMot}"
+									itemLabel="#{depa.title}" itemValue="#{depa.idMotive}" />
+						</p:selectOneMenu>
+							<p:outputLabel value="Fecha de Actividad" styleClass="ui-label-text2"></p:outputLabel>
+							<p:calendar value="#{actividadController.userBean.fechaVis}"
+									 pattern="dd/MM/yyyy"  disabled="#{actividadController.disabledUser}"></p:calendar>
+								<p:outputLabel value="Comentario" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputTextarea value="#{actividadController.userBean.comment}"
+								readonly="#{actividadController.disabledUser}" style="width:400px"></p:inputTextarea>
+							
+						</h:panelGrid>
+						<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{actividadController.evaluarMetodo}"
+								process="frmBuscarTipoUe" global="false"
+								update=":frmTipoue:tblTipoue"
+								onclick="PF('WGBuscarTipoUe').hide();"></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;"></p:commandButton>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

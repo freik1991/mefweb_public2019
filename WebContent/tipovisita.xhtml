@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+ .ui-paginator a {
+        margin-right: 5px;
+    }
+    
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmVisita">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Tipovisita</h1>
+							           						<p:growl id="msgs" showDetail="true" />
+						
+	                 
+						<p:dataTable id="tblVisita" var="asist" 
+							value="#{tipoVisitaController.lstAdm}" widgetVar="wgTipoV"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="false" rows="5" rowKey="#{asist.idTipoVis}"
+							style="font-size: 12px;text-align:center;padding :5px,"	
+							emptyMessage="Ningun Registro encontrado."
+							selectionMode="single"
+							selection="#{tipoVisitaController.selectItemsAdm}"
+                            >						
+						<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-left:0px !important; text-align:left;">
+										<p:commandButton
+											icon="fa fa-refresh"
+											value="Actualizar Lista"
+											style="width: 200px;"
+											oncomplete="PF('wgTipoV').filter()" />
+										<p:spacer width="30" />
+										<h:outputText value="Buscar (*): " />
+										<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px"
+												 />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+								            value="Buscar por descripción" />
+											<p:commandButton onclick="PF('wgTipoV').filter()"
+												icon="pi pi-search" />
+										<p:spacer width="5" />
+										<p:commandButton
+											onclick="PF('wgTipoV').clearFilters()"
+											icon="pi pi-ban" />
+									</p:outputPanel>
+								</div>
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-rigth:0px !important;text-align:right;">
+										<p:commandButton value="Añadir Tipovisita"
+												actionListener="#{tipoVisitaController.resetearUser}"
+												update="frmBuscarTipoVis"
+												onclick="PF('WGBuscarVisita').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{tipoVisitaController.habilitarUser}"
+												onclick="PF('WGBuscarVisita').show();"
+												update="frmBuscarTipoVis" process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{tipoVisitaController.deleteAdmin}" update="tblVisita" 
+												oncomplete="PF('wgTipoV').filter()"/>
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarVisita').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+										<p:spacer width="20" />
+										
+									</p:outputPanel>
+								</div>
+							</div>
+					    </f:facet>
+					    <p:ajax event="rowSelect"
+								listener="#{tipoVisitaController.selectedAdm}"
+								update=":frmVisita:msgs,frmBuscarTipoVis" />
+							<p:column headerText="Tipo de Visita" style="width: 1400px" filterBy="#{asist.descripcion}"   filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.descripcion}" />
+							</p:column>
+
+							<p:column headerText="Acciones" style="width: 75px">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarVisita').show()" icon="pi pi-eye"
+									update=":frmVisita:tblVisita,frmBuscarTipoVis">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{tipoVisitaController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+
+							
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarVis" header="Tipo de visita"
+				widgetVar="WGBuscarVisita" appendTo="@(body)" modal="true"
+				width="400" height="150" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarTipoVis">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					
+						<h:panelGrid columns="2">	 
+						<p:outputLabel value="Tipo de Visita:" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{tipoVisitaController.userBean.descripcion}" readonly="#{tipoVisitaController.disabledUser}"></p:inputText>
+						<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{tipoVisitaController.evaluarMetodo}"
+								process="frmBuscarTipoVis"
+								 global="false"
+								update=":frmVisita:tblVisita" oncomplete="PF('wgTipoV').filter()"
+								 onclick="PF('WGBuscarVisita').hide();"></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;"
+							onclick="PF('WGBuscarVisita').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

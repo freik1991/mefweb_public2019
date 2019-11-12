@@ -1,0 +1,347 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui-paginator a {
+	margin-right: 5px;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+			<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmCapaci">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<p:growl id="msgs" showDetail="true" />
+
+						<p:dataTable id="tblCapaci" var="asist" rowKey="#{asist.id}"
+							value="#{capacitacionController.lstAdm}" widgetVar="wgCapaci"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="false" rows="5"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							selectionMode="single"
+							selection="#{capacitacionController.selectItemsAdm}">
+							<f:facet name="header">
+								<div class="ui-g">
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-left:0px !important; text-align:left;">
+											<p:commandButton icon="fa fa-refresh"
+												value="Actualizar Lista" style="width: 200px;"
+												oncomplete="PF('wgCapaci').filter()" />
+											<p:spacer width="30" />
+											<h:outputText value="Buscar (*): " />
+											<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px" />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+												value="Buscar por descripción" />
+											<p:commandButton onclick="PF('wgCapaci').filter()"
+												icon="pi pi-search" />
+											<p:spacer width="5" />
+											<p:commandButton onclick="PF('wgCapaci').clearFilters()"
+												icon="pi pi-ban" />
+										</p:outputPanel>
+									</div>
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-rigth:0px !important;text-align:right;">
+											<p:commandButton value="Añadir Capacitacion"
+												actionListener="#{capacitacionController.resetearUser}"
+												update="frmBuscarCapaci"
+												onclick="PF('WGBuscarCapa').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil" process="@this"
+												actionListener="#{capacitacionController.habilitarUser}"
+												onclick="PF('WGBuscarCapa').show();"
+												update="frmBuscarCapaci" />
+
+										</p:outputPanel>
+									</div>
+								</div>
+							</f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{capacitacionController.selectedAdm}"
+								update=":frmCapaci:msgs,frmBuscarCapaci" />
+
+							<p:column headerText="Fecha" filterBy="#{asist.dateTraining}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width : 1400px;">
+								<h:outputText value="#{asist.dateTraining}" />
+							</p:column>
+							<p:column headerText="Tema" filterBy="#{asist.themeTraining}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width : 1400px;">
+								<h:outputText value="#{asist.themeTraining}" />
+							</p:column>
+							<p:column headerText="Local" filterBy="#{asist.localTraining}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width : 1400px;">
+								<h:outputText value="#{asist.localTraining}" />
+							</p:column>
+							<p:column headerText="Departamento" filterBy="#{asist.depaname}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width : 1400px;">
+								<h:outputText value="#{asist.depaname}" />
+							</p:column>
+							<p:column headerText="Acciones">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarCapa').show()" icon="pi pi-eye"
+									update=":frmCapaci:tblCapaci,frmBuscarCapaci">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{capacitacionController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarTipoLo" header="Capacitaciones"
+				widgetVar="WGBuscarCapa" appendTo="@(body)" modal="true" width="800"
+				height="690" showEffect="face" hideEffect="clip" resizable="false"
+				maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarCapaci">
+
+
+					<p:tabView>
+						<p:tab title="Datos a ingresar">
+							<h:panelGrid columns="2" cellpadding="4">
+								<p:outputLabel value="Fecha Capacitacion:"
+									styleClass="ui-label-text2"></p:outputLabel>
+								<p:calendar value="#{capacitacionController.userBean.fechaDate}"
+									pattern="dd/MM/yyyy" disabled="#{capacitacionController.disabledUser}"></p:calendar>
+								<p:outputLabel value="Tema Capacitacion:"
+									styleClass="ui-label-text2"></p:outputLabel>
+								<p:inputText
+									value="#{capacitacionController.userBean.themeTraining}"
+									style="width:470px;" readonly="#{capacitacionController.disabledUser}"></p:inputText>
+								<p:outputLabel value="Nivel:" styleClass="ui-label-text2"></p:outputLabel>
+								<p:selectOneMenu
+									value="#{capacitacionController.userBean.level}"
+									style="width:200px" disabled="#{capacitacionController.disabledUser}">
+									<f:selectItem itemLabel="Seleccione" itemValue="0" />
+									<f:selectItem itemLabel="Basico" itemValue="1" />
+									<f:selectItem itemLabel="Avanzado" itemValue="2" />
+								</p:selectOneMenu>
+								<p:outputLabel value="local Capacitacion:"
+									styleClass="ui-label-text2"></p:outputLabel>
+								<p:inputText
+									value="#{capacitacionController.userBean.localTraining}"
+									style="width:470px;" readonly="#{capacitacionController.disabledUser}"></p:inputText>
+								<p:outputLabel value="Departamento:" styleClass="ui-label-text2"></p:outputLabel>
+								<p:selectOneMenu style="width:322px"
+									value="#{capacitacionController.userBean.department}" disabled="#{capacitacionController.disabledUser}">
+									<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+									<f:selectItems var="depa"
+										value="#{capacitacionController.lstDepa}"
+										itemLabel="#{depa.name}" itemValue="#{depa.id}" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Tipo de Atención:"
+									styleClass="ui-label-text2"></p:outputLabel>
+								<p:selectOneMenu
+									value="#{capacitacionController.userBean.typeAttention}"
+									style="width:200px" disabled="#{capacitacionController.disabledUser}">
+									<f:selectItem itemLabel="Seleccione" itemValue="0" />
+									<f:selectItem itemLabel="Solicitada" itemValue="1" />
+									<f:selectItem itemLabel="Programada" itemValue="2" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Jefe de Grupo:" styleClass="ui-label-text2"></p:outputLabel>
+								<p:inputText
+									value="#{capacitacionController.userBean.groupLeader}"
+									style="width:470px;" readonly="#{capacitacionController.disabledUser}"></p:inputText>
+								<p:outputLabel value="Exposito(es):" styleClass="ui-label-text2"></p:outputLabel>
+								<p:inputTextarea
+									value="#{capacitacionController.userBean.exhibitor}"
+									style="width:470px;" readonly="#{capacitacionController.disabledUser}"></p:inputTextarea>
+
+							</h:panelGrid>
+							<h:panelGrid columns="4" cellpadding="4" cellspacing="6">
+								<p:outputLabel value="Sistema:" styleClass="ui-label-text2"></p:outputLabel>
+								<p:selectOneMenu style="width:150px;margin-left:82px;"
+									value="#{capacitacionController.userBean.typeSystem}" disabled="#{capacitacionController.disabledUser}">
+									<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+									<f:selectItems var="depa"
+										value="#{capacitacionController.lstTipoSis}"
+										itemLabel="#{depa.tipoSistema}" itemValue="#{depa.idTiposis}" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Modulo:" styleClass="ui-label-text2"></p:outputLabel>
+								<p:selectOneMenu style="width:250px" panelStyle="width:250px"
+									value="#{capacitacionController.userBean.moduleId}" disabled="#{capacitacionController.disabledUser}">
+									<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+									<f:selectItems var="depa"
+										value="#{capacitacionController.lstModulo}"
+										itemLabel="#{depa.moduleName}" itemValue="#{depa.id}" />
+								</p:selectOneMenu>
+							</h:panelGrid>
+							<h:panelGrid columns="4" cellpadding="4" cellspacing="6">
+								<p:outputLabel value="Observación:" styleClass="ui-label-text2"></p:outputLabel>
+								<p:inputTextarea
+									value="#{capacitacionController.userBean.observation}"
+									style="width:470px;margin-left:55px;" readonly="#{capacitacionController.disabledUser}"></p:inputTextarea>
+								<p:outputLabel></p:outputLabel>
+								<p:outputLabel></p:outputLabel>
+
+
+							</h:panelGrid>
+						</p:tab>
+						<p:tab title="Número de Personas capacitadas por Entidades">
+							<h:panelGrid columns="3" cellpadding="4">
+								<p:panel header="Gobierno Nacional">
+
+									<h:panelGrid columns="2" cellpadding="4" cellspacing="4">
+										<p:outputLabel value="Nro Entidades:"
+											styleClass="ui-label-text2" ></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroEntGN}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+										<p:outputLabel value="Nro Usuarios:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroUsuGN}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+									</h:panelGrid>
+								</p:panel>
+								<p:panel header="Gobierno Regional">
+
+									<h:panelGrid columns="2" cellpadding="4" cellspacing="4">
+										<p:outputLabel value="Nro Entidades:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroEntGR}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+										<p:outputLabel value="Nro Usuarios:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroUsuGR}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+									</h:panelGrid>
+								</p:panel>
+
+								<p:panel header="Gobierno Local">
+
+									<h:panelGrid columns="2" cellpadding="4" cellspacing="4">
+										<p:outputLabel value="Nro Entidades:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroEntGL}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+										<p:outputLabel value="Nro Usuarios:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroUsuGL}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+									</h:panelGrid>
+								</p:panel>
+
+								<p:panel header="Unidad Operativa">
+
+									<h:panelGrid columns="2" cellpadding="4" cellspacing="4">
+										<p:outputLabel value="Nro Entidades:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroEntUO}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+										<p:outputLabel value="Nro Usuarios:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroUsuUO}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+									</h:panelGrid>
+								</p:panel>
+								<p:panel header="Mancomunidades">
+
+									<h:panelGrid columns="2" cellpadding="4" cellspacing="4">
+										<p:outputLabel value="Nro Entidades:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroEntMC}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+										<p:outputLabel value="Nro Usuarios:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroUsuMC}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+									</h:panelGrid>
+								</p:panel>
+
+								<p:panel header="Instituto Vial Provincial(IPV)">
+
+									<h:panelGrid columns="2" cellpadding="4" cellspacing="4">
+										<p:outputLabel value="Nro Entidades:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroEntIP}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+										<p:outputLabel value="Nro Usuarios:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroUsuIP}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+									</h:panelGrid>
+								</p:panel>
+
+
+							</h:panelGrid>
+							<h:panelGrid columns="3" cellpadding="4">
+								<p:panel header="Entidades de Tratamiento Empresarial(ETEs)">
+
+									<h:panelGrid columns="2" cellpadding="4" cellspacing="4">
+										<p:outputLabel value="Nro Entidades:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroEntTE}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+										<p:outputLabel value="Nro Usuarios:"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:spinner value="#{capacitacionController.userBean.nroUsuTE}"
+											style="width:70px;" readonly="#{capacitacionController.disabledUser}"></p:spinner>
+									</h:panelGrid>
+								</p:panel>
+							</h:panelGrid>
+							<p:spacer></p:spacer>
+							<br />
+							<br />
+							<br />
+						</p:tab>
+
+					</p:tabView>
+					<br />
+					<p:commandButton value="Guardar" style="margin-top:3px;"
+						actionListener="#{capacitacionController.evaluarMetodo}"
+						process="frmBuscarCapaci" global="false"
+						update=":frmCapaci:tblCapaci" oncomplete="PF('wgCapaci').filter()" onclick="PF('WGBuscarCapa').hide();"></p:commandButton>
+					<p:commandButton value="Cancelar" onclick="PF('WGBuscarCapa').hide();" style="margin-top:3px;"></p:commandButton>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

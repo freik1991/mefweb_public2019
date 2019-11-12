@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+			
+		<script
+			src="https://maps.googleapis.com/maps/api/js?sensor=true"
+			type="text/javascript"></script>
+			
+		<h:outputScript library="primefaces" name="jquery/jquery.js" />
+		<script src="js/prueba.js"></script>
+		
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui-paginator a {
+	margin-right: 5px;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+	color: white !important;
+}
+
+body .ui-datatable thead th {
+	background-color: #3e5367 !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+			<ui:include src="WEB-INF/topbar.xhtml" />
+
+			<h:form id="frmAdm">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Geozonas</h1>
+						<p:growl id="msgs" showDetail="true" />
+
+						<p:dataTable id="tblGeo" var="asist"
+							value="#{genericController.lstGeo}" rowIndexVar="rowIndex"
+							tableStyle="table-layout: auto;" paginator="false" rows="5" rowKey="#{asist.id}"
+							style="font-size: 12px;text-align:center;padding :5px," 
+							currentPageReportTemplate="Página {currentPage} de {totalPages} | Mostrando Registros del {startRecord} al {endRecord} de un Total de {totalRecords}"
+							emptyMessage="Ningun Registro encontrado." selectionMode="single"
+							selection="#{genericController.selectItemsGeo}">
+							<p:ajax event="rowSelect"
+								listener="#{genericController.selectGeo}" update="frmBuscarGeozona,frmAdm:msgs"/>
+							<p:column headerText="Geozona">
+								<h:outputText value="#{asist.geozoneName}" />
+							</p:column>
+
+							<p:column headerText="Implantador" style="width: 75px">
+								<h:outputText value="#{asist.first_name} #{asist.last_name}"
+									style="width: 75px" />
+							</p:column>
+
+							<p:column headerText="Fecha y hora de creación">
+								<h:outputText value="#{asist.geozoneName}" />
+							</p:column>
+
+							<p:column headerText="Referencia">
+								<h:outputText value="#{asist.geozoneReference}" />
+							</p:column>
+							<p:column headerText="Tipo de Referencia">
+								<h:outputText value="#{asist.geozoneName}" />
+							</p:column>
+							<p:column headerText="latitud">
+								<h:outputText value="#{asist.latitude}" />
+							</p:column>
+							<p:column headerText="longitud">
+								<h:outputText value="#{asist.latitude}" />
+							</p:column>
+							<p:column headerText="Radio">
+								<h:outputText value="#{asist.radius}" />
+							</p:column>
+							<p:column headerText="Color">
+								<h:outputText value="#{asist.geozoneName}" />
+							</p:column>
+							<p:column headerText="Acciones" style="width: 75px">
+								<p:commandButton type="button" title="Edit"
+									onclick="PF('WGGeozona').show()" icon="pi pi-pencil">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{genericController.selectItemsGeo}" />
+
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+
+			<p:dialog id="dlgGeozona" header="Geozona" widgetVar="WGGeozona"
+				appendTo="@(body)" modal="true" width="800" height="600"
+				showEffect="face" hideEffect="clip" resizable="false"
+				maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarGeozona" prependId="false">
+					<p:panel header="Editar Geozona" style="font-size: 13px">
+						<div id="map" style="width: 700px; height: 500px;"></div>
+						<input type="text" style="width: 400px; display: none;" value="0"
+							id="circle" />
+						<h:inputText style="width: 400px; display: none;"
+							value="#{genericController.userAsiBean.latitude}"
+							id="txtLatitud" />
+						<h:inputText style="width: 400px; display: none;"
+							value="#{genericController.userAsiBean.longitude}"
+							id="txtLongitud" />
+						<h:inputText style="width: 400px; display: none;"
+							value="#{genericController.userAsiBean.radius}" id="txtRadio" />
+					</p:panel>
+					<p:commandButton value="Guardar" style="margin-top:3px;"
+						actionListener="#{genericController.guardarZona}"
+						process="frmBuscarGeozona" global="false" update=":frmAdm:tblGeo"
+						onclick="PF('WGGeozona').hide();"></p:commandButton>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

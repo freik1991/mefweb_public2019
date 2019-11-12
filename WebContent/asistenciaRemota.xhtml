@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+ .ui-paginator a {
+        margin-right: 5px;
+    }
+    
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmAsisRem">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<!-- 					<p:outputLabel  styleClass="card-title" value="BIENVENIDO: #{loginController.nombre}"/> -->
+						<h1 style="font-size: 36px;">Reporte de Asistencias Remotas</h1>
+						<!-- 					<h:panelGrid columns="4" cellpadding="5"> -->
+						<!-- 						<p:outputLabel value="Campos:" ></p:outputLabel> -->
+						<!-- 						<p:selectOneMenu style="width:300px"> -->
+						<!-- 							<f:selectItem itemLabel="[Seleccione]" itemValue="" /> -->
+						<!-- 							<f:selectItem itemLabel="Xbox One" itemValue="Xbox One" /> -->
+						<!-- 							<f:selectItem itemLabel="PS4" itemValue="PS4" /> -->
+						<!-- 							<f:selectItem itemLabel="Wii U" itemValue="Wii U" /> -->
+						<!-- 						</p:selectOneMenu> -->
+						<!-- 						<p:inputText value="valor" styleClass="ui-label-text"></p:inputText> -->
+						<!-- 						<p:commandButton value="Agregar"></p:commandButton> -->
+
+						<!-- 					</h:panelGrid> -->
+						<p:commandButton value="Buscar" icon="pi pi-search"
+							actionListener="#{asistenciaRemotaController.buscarAsistenciaRemota}" onclick="PF('WGBuscarAsisRem').show();"
+							update="frmBuscarAsistenciaRem"></p:commandButton>
+						<br /> <br />
+						<p:dataTable id="tblAsisRem" var="asist"
+							value="#{asistenciaRemotaController.lstAsis}"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="true" rows="5"
+							style="font-size: 12px;text-align:center;padding :5px;margin-bottom:20px"
+paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"							
+							
+							emptyMessage="Ningun Registro encontrado.">
+						 <f:facet name="{Exporters}">
+            <div style="float:right;padding-top: 5px;">
+                <h:commandLink>
+                    <p:graphicImage url="images/excel.png" width="24"/>
+                    <p:dataExporter type="xls" target="tblAsisRem" fileName="lstAsis" />
+                </h:commandLink>
+ 
+                <h:commandLink>
+                    <p:graphicImage url="images/pdf.png" width="24"/>
+                    <p:dataExporter type="pdf" target="tblAsisRem" fileName="lstAsis"/>
+                </h:commandLink>
+ 
+                <h:commandLink>
+                    <p:graphicImage url="images/csv.png" width="24"/>
+                    <p:dataExporter type="csv" target="tblAsisRem" fileName="lstAsis" />
+                </h:commandLink>
+ 
+            
+            </div>
+        </f:facet>
+							<p:column headerText="Sec Ejec">
+								<h:outputText value="#{asist.secEjec}" />
+							</p:column>
+
+							<p:column headerText="Entidad" style="width: 75px">
+								<h:outputText value="#{asist.unitName}" style="width: 75px" />
+							</p:column>
+
+							<p:column headerText="Departamento">
+								<h:outputText value="#{asist.name}" />
+							</p:column>
+
+							<p:column headerText="Sectorista">
+								<h:outputText
+									value="#{asistenciaTecController.sectoristaName(asist.sectorist_id)}" />
+							</p:column>
+							<p:column headerText="Implantador">
+								<h:outputText value="#{asist.IMPLANTADOR}" />
+							</p:column>
+							<p:column headerText="Sistema">
+								<h:outputText value="#{asist.systemName}" />
+							</p:column>
+							<p:column headerText="Módulo">
+								<h:outputText value="Ver Modulo" />
+							</p:column>
+							<p:column headerText="Sub módulo">
+								<h:outputText
+									value="#{asist.moduleName}" />
+							</p:column>
+							<p:column headerText="Modalidad">
+								<h:outputText
+									value="#{asist.modality}" />
+							</p:column>
+							<p:column headerText="Descripción de la asistencia">
+								<h:outputText
+									value="#{asist.description}" />
+							</p:column>
+							<p:column headerText="Fecha de la Asistencia">
+								<h:outputText
+									value="#{asist.assistanceDate}" />
+							</p:column>
+							<p:column headerText="Fecha de Registro">
+								<h:outputText
+									value="#{asistenciaTecController.fechaEnvio(asist.timestamp)}" />
+							</p:column>
+							<p:column headerText="Via" style="width: 10px">
+								<h:outputText value="#{asist.registerType eq 1 ? 'Movil' : 'Web'}" style="width: 10px" />
+							</p:column>
+							
+						</p:dataTable>
+
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarAsistRemota" header="Buscar Asistencia Tecnica"
+				widgetVar="WGBuscarAsisRem" appendTo="@(body)" modal="true"
+				width="800" height="563" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarAsistenciaRem">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					<p:selectOneRadio id="customRadio" value="#{asistenciaRemotaController.asistenciaRemotaBean.rbFechaSelec}" layout="custom">
+            <f:selectItem itemLabel="Fecha de Asistencia" itemValue="1" />
+            <f:selectItem itemLabel="Fecha de Registro" itemValue="2" />
+            <p:ajax listener="#{asistenciaRemotaController.eventoButtonFecha}" process="@this"  event="change" update="chkAsi,chkReg" />
+        </p:selectOneRadio>
+						<h:panelGrid columns="5">
+												        <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+						
+							<p:selectBooleanCheckbox id="chkAsi" value="#{asistenciaRemotaController.asistenciaRemotaBean.checkFechaAsisRIni}" disabled="#{asistenciaRemotaController.asistenciaRemotaBean.disEnvio}" itemLabel="Fecha de Asistencia" styleClass="ui-label-text2"/>
+							<p:calendar
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.fechaAsiICal}"
+								showOn="button" ></p:calendar>
+							<p:outputLabel value="Hasta:"
+								style="margin-left:6px;margin-right:6px;"
+								styleClass="ui-label-text2"></p:outputLabel>
+							<p:calendar
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.fechaAsiFCal}"
+								showOn="button" ></p:calendar>
+							<p:radioButton id="opt2" for="customRadio"  itemIndex="1" />	
+							<p:selectBooleanCheckbox id="chkReg" value="#{asistenciaRemotaController.asistenciaRemotaBean.checkFechaAsisRFin}" disabled="#{asistenciaRemotaController.asistenciaRemotaBean.disResp}" itemLabel="Fecha de Registro" styleClass="ui-label-text2"/>
+							<p:calendar
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.fechaRegICal}"
+								showOn="button" ></p:calendar>
+							<p:outputLabel value="Hasta:"
+								style="margin-left:6px;margin-right:6px;"
+								styleClass="ui-label-text2"></p:outputLabel>
+							<p:calendar
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.fechaARegFCal}"
+								showOn="button"></p:calendar>
+						</h:panelGrid>
+						<h:panelGrid columns="2" cellpadding="2">
+						<p:selectBooleanCheckbox value="#{asistenciaRemotaController.asistenciaRemotaBean.checkSecEje}" itemLabel="Sec Ejec" styleClass="ui-label-text2"/>
+							<p:inputText
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.secEjec}"></p:inputText>
+								<p:selectBooleanCheckbox value="#{asistenciaRemotaController.asistenciaRemotaBean.checkDepa}" itemLabel="Departamento" styleClass="ui-label-text2"/>
+							<p:selectOneMenu style="width:322px"
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.department}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{asistenciaRemotaController.lstDepa}"
+									itemLabel="#{depa.name}" itemValue="#{depa.id}" />
+							</p:selectOneMenu>
+							<p:selectBooleanCheckbox value="#{asistenciaRemotaController.asistenciaRemotaBean.checkEntidad}" itemLabel="Entidad" styleClass="ui-label-text2"/>
+								<p:selectOneMenu style="width:322px"
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.unitName}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="uni"
+									value="#{asistenciaRemotaController.lstEntidad}"
+									itemLabel="#{uni.unitName}" itemValue="#{uni.id}" />
+							</p:selectOneMenu>
+								<p:selectBooleanCheckbox value="#{asistenciaRemotaController.asistenciaRemotaBean.checkSectorista}" itemLabel="Sectorista" styleClass="ui-label-text2"/>
+								<p:selectOneMenu style="width:322px"
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.nameSec}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="sec"
+									value="#{asistenciaRemotaController.lstSec}"
+									itemLabel="#{sec.nombreSec} #{sec.apellidoSec}" itemValue="#{sec.idSec}" />
+							</p:selectOneMenu>
+							<p:selectBooleanCheckbox value="#{asistenciaRemotaController.asistenciaRemotaBean.checkImpl}" itemLabel="Implantador" styleClass="ui-label-text2"/>
+								
+							<p:selectOneMenu style="width:322px"
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.IMPLANTADOR}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{asistenciaRemotaController.lstImp}"
+									itemLabel="#{depa.nameImp}" itemValue="#{depa.idImpl}" />
+							</p:selectOneMenu>
+							<p:selectBooleanCheckbox value="#{asistenciaRemotaController.asistenciaRemotaBean.checkMod}" itemLabel="Modalidad" styleClass="ui-label-text2"/>
+								<p:selectOneMenu style="width:322px"
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.modalidad}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{asistenciaRemotaController.lstModa}"
+									itemLabel="#{depa.titulo}" itemValue="#{depa.idModalidad}" />
+							</p:selectOneMenu>
+							<p:selectBooleanCheckbox value="#{asistenciaRemotaController.asistenciaRemotaBean.checkSis}" itemLabel="Sistema" styleClass="ui-label-text2"/>
+								<p:selectOneMenu style="width:322px"
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.sistema}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{asistenciaRemotaController.lstTipoSis}"
+									itemLabel="#{depa.tipoSistema}" itemValue="#{depa.idTiposis}" />
+							</p:selectOneMenu>
+								<p:selectBooleanCheckbox value="#{asistenciaRemotaController.asistenciaRemotaBean.checkReg}" itemLabel="Via de Registro" styleClass="ui-label-text2"/>
+							<p:selectOneMenu
+								value="#{asistenciaRemotaController.asistenciaRemotaBean.registro}"
+								style="width:200px">
+								<f:selectItem itemLabel="Seleccione" itemValue="0" />
+								<f:selectItem itemLabel="MOVIL" itemValue="1" />
+								<f:selectItem itemLabel="WEB" itemValue="2" />
+							</p:selectOneMenu>
+							
+							<p:commandButton value="Ejecutar Filtro" 
+								actionListener="#{asistenciaRemotaController.filtroAsistenciaRemota}"  update=":frmAsisRem:tblAsisRem" process="frmBuscarAsistenciaRem" global="false" onclick="PF('WGBuscarAsisRem').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

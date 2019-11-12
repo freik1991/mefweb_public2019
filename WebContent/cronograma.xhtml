@@ -1,0 +1,253 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+ .ui-paginator a {
+        margin-right: 5px;
+    }
+    
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+
+body .ui-selectonemenu-panel .ui-selectonemenu-filter-container .ui-selectonemenu-filter.ui-inputfield{
+width : 430px !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmCrono">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Cronograma de Visitas</h1>
+	                   	           						<p:growl id="msgs" showDetail="true" />
+	                   
+						<p:dataTable id="tblCrono" var="asist" rowKey="#{asist.idCrono}"
+							value="#{cronogramaController.lstAdm}" widgetVar="wgCrono"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="false" rows="8"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							selectionMode="single"
+							selection="#{cronogramaController.selectItemsAdm}"
+                            >						
+						<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-left:0px !important; text-align:left;">
+										<p:commandButton
+											icon="fa fa-refresh"
+											value="Actualizar Lista"
+											style="width: 200px;"
+											oncomplete="PF('wgCrono').filter()" />
+										<p:spacer width="30" />
+										<h:outputText value="Buscar (*): " />
+										<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px"
+												 />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+								            value="Buscar por descripción" />
+											<p:commandButton onclick="PF('wgCrono').filter()"
+												icon="pi pi-search" />
+										<p:spacer width="5" />
+										<p:commandButton
+											onclick="PF('wgCrono').clearFilters()"
+											icon="pi pi-ban" />
+									</p:outputPanel>
+								</div>
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-rigth:0px !important;text-align:right;">
+										<p:commandButton value="Añadir Cronograma"
+												actionListener="#{cronogramaController.resetearUser}"
+												update="frmBuscarCrono"
+												onclick="PF('WGBuscarCrono').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{cronogramaController.habilitarUser}"
+												onclick="PF('WGBuscarCrono').show();"
+												update="frmBuscarCrono" process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{cronogramaController.deleteAdmin}" update="tblCrono" 
+												oncomplete="PF('wgCrono').filter()" />
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarCrono').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+										<p:spacer width="20" />
+										
+									</p:outputPanel>
+								</div>
+							</div>
+					    </f:facet>
+					    <p:ajax event="rowSelect"
+								listener="#{cronogramaController.selectedAdm}"
+								update=":frmCrono:msgs,frmBuscarCrono" />
+							<p:column headerText="Implantador" filterBy="#{asist.implanted_name}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.implanted_name}" />
+							</p:column>
+							<p:column headerText="Entidad" filterBy="#{asist.unitName}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.unitName}" />
+							</p:column>
+							<p:column headerText="Fecha" filterBy="#{asist.visitDate}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.visitDate}" >
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Hora" filterBy="#{asist.visitHour}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.visitHour}" >
+								<f:convertDateTime pattern="HH/mm" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Tipo de Visita" filterBy="#{asist.descripcion}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.descripcion}" />
+							</p:column>
+							<p:column headerText="Sistema" filterBy="#{asist.tipoSistema}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.tipoSistema}" />
+							</p:column>
+							<p:column headerText="Comentario" filterBy="#{asist.comments}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.comments}" />
+							</p:column>
+							<p:column headerText="Estado" filterBy="#{asist.status}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.status eq '1' ? 'Completo' : 'Incompleto'}" />
+							</p:column>
+							<p:column headerText="Acciones">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarCrono').show()" icon="pi pi-eye"
+									update=":frmCrono:tblCrono,frmBuscarCrono">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{cronogramaController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarTipoLo" header="Cronograma de visitas"
+				widgetVar="WGBuscarCrono" appendTo="@(body)" modal="true"
+				width="800" height="620" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarCrono">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					
+						<h:panelGrid columns="2" cellpadding="4">	 
+						<p:outputLabel value="Entidad" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:470px" panelStyle="width:470px" filter="true" filterMatchMode="startsWith"
+								value="#{cronogramaController.userBean.unit_id}" disabled="#{cronogramaController.disabledUser}" >
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="uni"
+									value="#{cronogramaController.lstEntidad}"
+									itemLabel="#{uni.unitName}" itemValue="#{uni.id}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Representante" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+									value="#{cronogramaController.userBean.representativeName}"
+									style="width:470px;" readonly="#{cronogramaController.disabledUser}"></p:inputText>
+					    <p:outputLabel value="Cargo" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+									value="#{cronogramaController.userBean.representativePosition}"
+									style="width:470px;" readonly="#{cronogramaController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Teléfono de Representante" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+									value="#{cronogramaController.userBean.representativePhone}"
+									style="width:470px;" readonly="#{cronogramaController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Correo de Representante" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+									value="#{cronogramaController.userBean.representativeEmail}"
+									style="width:470px;" readonly="#{cronogramaController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Fecha" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:calendar value="#{cronogramaController.userBean.fechaVis}"
+									pattern="dd/MM/yyyy" disabled="#{cronogramaController.disabledUser}"></p:calendar>
+						<p:outputLabel value="Hora" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:calendar value="#{cronogramaController.userBean.horaVis}"
+									 pattern="HH:mm" timeOnly="true" disabled="#{cronogramaController.disabledUser}"></p:calendar>
+						<p:outputLabel value="Implantador" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:322px" disabled="#{cronogramaController.disabledUser}"
+								value="#{cronogramaController.userBean.implanter_id}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{cronogramaController.lstImp}"
+									itemLabel="#{depa.nameImp}" itemValue="#{depa.idImpl}" />
+							</p:selectOneMenu>
+						<p:outputLabel value="Tipo de Visita" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:selectOneMenu style="width:322px"
+								value="#{cronogramaController.userBean.visitType}" disabled="#{cronogramaController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{cronogramaController.lstTipoVis}"
+									itemLabel="#{depa.descripcion}" itemValue="#{depa.idTipoVis}" />
+							</p:selectOneMenu>
+						<p:outputLabel value="Sistema" styleClass="ui-label-text2"></p:outputLabel>    
+					<p:selectOneMenu style="width:322px"
+								value="#{cronogramaController.userBean.systemId}" disabled="#{cronogramaController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{cronogramaController.lstTipoSis}"
+									itemLabel="#{depa.tipoSistema}" itemValue="#{depa.idTiposis}" />
+							</p:selectOneMenu>
+						<p:outputLabel value="Comentario" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+									value="#{cronogramaController.userBean.comments}"
+									style="width:470px;" readonly="#{cronogramaController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Estado" styleClass="ui-label-text2"></p:outputLabel>
+								<p:selectOneMenu
+									value="#{cronogramaController.userBean.status}"
+									style="width:200px" disabled="#{cronogramaController.disabledUser}">
+									<f:selectItem itemLabel="Seleccione" itemValue="0" />
+									<f:selectItem itemLabel="Incompleto" itemValue="2" />
+									<f:selectItem itemLabel="Completo" itemValue="1" />
+								</p:selectOneMenu>
+								
+						</h:panelGrid>
+						<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{cronogramaController.evaluarMetodo}"
+								process="frmBuscarCrono"
+								 global="false"
+								update=":frmCrono:tblCrono" oncomplete="PF('wgCrono').filter()" onclick="PF('WGBuscarCrono').hide();" ></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;" onclick="PF('WGBuscarCrono').hide();"></p:commandButton>
+					
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

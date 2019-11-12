@@ -1,0 +1,356 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui-paginator a {
+	margin-right: 5px;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+	color: white !important;
+}
+
+body .ui-datatable thead th {
+	background-color: #3e5367 !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+			<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmEntidad">
+				<div class="ui-g-12">
+					<div class="" style="height: 100%">
+						<h1 style="font-size: 25px;">Reporte de Evaluación Atención</h1>
+						<p:growl id="msgs" showDetail="true" />
+
+						<br />
+						<p:dataTable id="tblEnt" var="asist" widgetVar="wgEntidad"
+							value="#{reporteController.lstEvaluacionTec}" rowIndexVar="rowIndex"
+							tableStyle="table-layout: auto;" paginator="true" rows="15"
+							style="font-size: 12px;text-align:center;padding :5px," 
+							>
+							
+							<p:column headerText="Sec Ejec" >
+								<h:outputText value="#{asist.secEjec}" />
+							</p:column>
+
+							<p:column headerText="Entidad" >
+								<h:outputText value="#{asist.unitName}" />
+							</p:column>
+
+                            <p:column headerText="Implantador" >
+								<h:outputText value="#{asist.implantador_names}"  />
+							</p:column>
+							
+							 <p:column headerText="Departamento" >
+								<h:outputText value="#{asist.departament_name}" />
+							</p:column>
+							
+							 <p:column headerText="F.envio" >
+								<h:outputText value="#{asist.arrivalDate}"/>
+							</p:column>
+							
+							 <p:column headerText="F.Respuesta">
+								<h:outputText value="#{asist.departureDate}"  />
+							</p:column>
+							
+							<p:column headerText="Sistema">
+								<h:outputText value="#{asist.systemName}" />
+							</p:column>
+
+                             <p:column headerText="F">
+								<h:outputText value="#{asist.isFunctional}" />
+							</p:column>
+							
+							<p:column headerText="T">
+								<h:outputText value="#{asist.isTechnical}" />
+							</p:column>
+							
+							<p:column headerText="C">
+								<h:outputText value="#{asist.isTraining}" />
+							</p:column>
+							
+                            <p:column headerText="Comentario">
+								<h:outputText value="#{asist.recomendacion}" />
+							</p:column>
+							
+							<p:column headerText="Representante de Entidad" >
+								<h:outputText
+									value="#{asist.representantName}" />
+							</p:column>
+							<p:column headerText="Cargo de Representante" >
+								<h:outputText value="#{asist.representantWorkingPosition}" />
+							</p:column>
+							<p:column headerText="Via"  >
+								<h:outputText value="#{asist.registerType eq 1 ? 'Movil' : 'Web'}" />
+							</p:column>
+							
+
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarEnt" header="Buscar Entidad"
+				widgetVar="WGBuscarEnt" appendTo="@(body)" modal="true" width="1000"
+				height="570" showEffect="face" hideEffect="clip" 
+				maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarEnt">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+
+						<h:panelGrid columns="4" cellpadding="4">
+							<p:outputLabel value="Entidad secejec:"
+								styleClass="ui-label-text2" ></p:outputLabel>
+							<p:inputText
+								value="#{entidadController.entidadBean.unit_secEjec}" readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Nombre" styleClass="ui-label-text2"></p:outputLabel>
+
+							<p:inputText
+								value="#{entidadController.entidadBean.unit_unitname}"
+								style="width:350px;" readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Dirección" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{entidadController.entidadBean.address}" readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Tipo UE" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu style="width:200px" panelStyle="width : 200px;"
+								value="#{entidadController.entidadBean.unitType}"
+								disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec" value="#{entidadController.lstTipoUe}"
+									itemLabel="#{sec.descripcion}" itemValue="#{sec.descripcion}" />
+							</p:selectOneMenu>
+							<p:outputLabel value="Sectorista" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu style="width:200px" panelStyle="width : 200px;"
+								value="#{entidadController.entidadBean.sectorist_id}" disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec"
+									value="#{entidadController.lstSectorista}"
+									itemLabel="#{sec.nombreSec}" itemValue="#{sec.idSec}" />
+							</p:selectOneMenu>
+							<p:outputLabel value="Nombre de Representante"
+								styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText
+								value="#{entidadController.entidadBean.representativeName}" readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Correo" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText
+								value="#{entidadController.entidadBean.representativeEmail}" readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Cargo" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText
+								value="#{entidadController.entidadBean.representativePosition}" readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Telefono" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText
+								value="#{entidadController.entidadBean.representativePhone}" readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Geozona" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu style="width:200px" panelStyle="width : 200px;"
+								value="#{entidadController.entidadBean.locality}"
+								disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec" value="#{entidadController.lstGeozona}"
+									itemLabel="#{sec.geozoneName}" itemValue="#{sec.geozoneName}" />
+							</p:selectOneMenu>
+							<p:outputLabel value="Estado" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu value="#{entidadController.entidadBean.status}"
+								style="width:200px" disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="Seleccione" itemValue="0" />
+								<f:selectItem itemLabel="Activo" itemValue="A" />
+								<f:selectItem itemLabel="Inactivo" itemValue="I" />
+							</p:selectOneMenu>
+						
+									
+						</h:panelGrid>
+						<h:panelGroup layout="block" id="container">
+						<h:panelGrid columns="2">
+						 <h:graphicImage  width="150"  height="150" value="images/google.PNG"   />
+						
+       <p:panel header="Ubigeo">
+       <h:panelGrid columns="2">
+       <p:outputLabel value="Departamento" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu style="width:200px" panelStyle="width : 200px;"
+								value="#{entidadController.entidadBean.depa}"
+								disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec" value="#{entidadController.lstDepaUbi}"
+									itemLabel="#{sec.name}" itemValue="#{sec.id}" />
+								<p:ajax  listener="#{entidadController.listarProvincia()}" update="cbProvincia"/>			   
+									
+							</p:selectOneMenu>
+							<p:outputLabel  value="Provincia" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu id="cbProvincia" style="width:200px" panelStyle="width : 200px;"
+								value="#{entidadController.entidadBean.province}"
+								disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec" value="#{entidadController.lstProvUbi}"
+									itemLabel="#{sec.nameprov}" itemValue="#{sec.mefprov}" />
+																	<p:ajax  listener="#{entidadController.listarDistrito()}" update="cbDistrito"/>			   
+									
+							</p:selectOneMenu>
+							<p:outputLabel value="Distrito" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu id="cbDistrito" style="width:200px" panelStyle="width : 200px;"
+								value="#{entidadController.entidadBean.district}"
+								disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec" value="#{entidadController.lstDistUbi}"
+									itemLabel="#{sec.name}" itemValue="#{sec.mefid}" />
+							</p:selectOneMenu>
+      </h:panelGrid>
+       </p:panel>
+						</h:panelGrid>
+						     
+     
+      </h:panelGroup>
+					</p:panel>
+
+					<br></br>
+					<p:commandButton value="Guardar" style="margin-top:3px;"
+						actionListener="#{entidadController.evaluarMetodo}"
+						process="frmBuscarEnt" global="false" update=":frmEntidad:tblEnt"
+						onclick="PF('WGBuscarEnt').hide();"></p:commandButton>
+					<p:commandButton value="Cancelar" style="margin-top:3px;"></p:commandButton>
+
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog id="dlgBuscarAsistRemota" header="Buscar Asistencia Tecnica"
+				widgetVar="WGBuscarAsisRem" appendTo="@(body)" modal="true"
+				width="800" height="500" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarAsistenciaRem">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					<p:selectOneRadio id="customRadio" value="#{reporteController.asistenciaRemotaBean.rbFechaSelec}" layout="custom">
+            <f:selectItem itemLabel="Fecha de Asistencia" itemValue="1" />
+            <f:selectItem itemLabel="Fecha de Registro" itemValue="2" />
+            <p:ajax listener="#{reporteController.eventoButtonFecha}" process="@this"  event="change" update="chkAsi,chkReg" />
+        </p:selectOneRadio>
+						<h:panelGrid columns="5">
+														        <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+						
+							<p:selectBooleanCheckbox id="chkAsi" value="#{reporteController.asistenciaRemotaBean.checkFechaAsisRIni}" disabled="#{reporteController.asistenciaRemotaBean.disEnvio}" itemLabel="Fecha de Asistencia" styleClass="ui-label-text2"/>
+							<p:calendar
+								value="#{reporteController.asistenciaRemotaBean.fechaAsiICal}"
+								showOn="button" ></p:calendar>
+							<p:outputLabel value="Hasta:"
+								style="margin-left:6px;margin-right:6px;"
+								styleClass="ui-label-text2"></p:outputLabel>
+							<p:calendar
+								value="#{reporteController.asistenciaRemotaBean.fechaAsiFCal}"
+								showOn="button" ></p:calendar>
+							<p:radioButton id="opt2" for="customRadio"  itemIndex="1" />	
+							<p:selectBooleanCheckbox id="chkReg" value="#{reporteController.asistenciaRemotaBean.checkFechaAsisRFin}" disabled="#{reporteController.asistenciaRemotaBean.disResp}" itemLabel="Fecha de Registro" styleClass="ui-label-text2"/>
+							<p:calendar
+								value="#{reporteController.asistenciaRemotaBean.fechaRegICal}"
+								showOn="button" ></p:calendar>
+							<p:outputLabel value="Hasta:"
+								style="margin-left:6px;margin-right:6px;"
+								styleClass="ui-label-text2"></p:outputLabel>
+							<p:calendar
+								value="#{reporteController.asistenciaRemotaBean.fechaARegFCal}"
+								showOn="button"></p:calendar>
+						</h:panelGrid>
+						<h:panelGrid columns="2" cellpadding="2">
+						<p:selectBooleanCheckbox value="#{reporteController.asistenciaRemotaBean.checkSecEje}" itemLabel="Sec Ejec" styleClass="ui-label-text2"/>
+							<p:inputText
+								value="#{reporteController.asistenciaRemotaBean.secEjec}" style="width:70px;"></p:inputText>
+								<p:selectBooleanCheckbox value="#{reporteController.asistenciaRemotaBean.checkDepa}" itemLabel="Departamento" styleClass="ui-label-text2"/>
+							<p:selectOneMenu style="width:322px"
+								value="#{reporteController.asistenciaRemotaBean.department}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{reporteController.lstDepa}"
+									itemLabel="#{depa.name}" itemValue="#{depa.id}" />
+							</p:selectOneMenu>
+							<p:selectBooleanCheckbox value="#{reporteController.asistenciaRemotaBean.checkEntidad}" itemLabel="Entidad" styleClass="ui-label-text2"/>
+								<p:selectOneMenu style="width:322px" panelStyle="width:322px"
+								value="#{reporteController.asistenciaRemotaBean.unitName}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="uni"
+									value="#{reporteController.lstEntidad}"
+									itemLabel="#{uni.unitName}" itemValue="#{uni.id}" />
+							</p:selectOneMenu>
+								<p:selectBooleanCheckbox value="#{reporteController.asistenciaRemotaBean.checkSectorista}" itemLabel="Sectorista" styleClass="ui-label-text2"/>
+								<p:selectOneMenu style="width:322px"
+								value="#{reporteController.asistenciaRemotaBean.nameSec}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="sec"
+									value="#{reporteController.lstSec}"
+									itemLabel="#{sec.nombreSec} #{sec.apellidoSec}" itemValue="#{sec.idSec}" />
+							</p:selectOneMenu>
+							<p:selectBooleanCheckbox value="#{reporteController.asistenciaRemotaBean.checkImpl}" itemLabel="Implantador" styleClass="ui-label-text2"/>
+								
+							<p:selectOneMenu style="width:322px"
+								value="#{reporteController.asistenciaRemotaBean.IMPLANTADOR}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{reporteController.lstImp}"
+									itemLabel="#{depa.nameImp}" itemValue="#{depa.idImpl}" />
+							</p:selectOneMenu>
+							<p:selectBooleanCheckbox value="#{reporteController.asistenciaRemotaBean.checkMod}" itemLabel="Modalidad" styleClass="ui-label-text2"/>
+								<p:selectOneMenu style="width:322px"
+								value="#{reporteController.asistenciaRemotaBean.modalidad}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{reporteController.lstModa}"
+									itemLabel="#{depa.titulo}" itemValue="#{depa.idModalidad}" />
+							</p:selectOneMenu>
+							<p:selectBooleanCheckbox value="#{reporteController.asistenciaRemotaBean.checkSis}" itemLabel="Sistema" styleClass="ui-label-text2"/>
+								<p:selectOneMenu style="width:322px"
+								value="#{reporteController.asistenciaRemotaBean.sistema}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="" />
+								<f:selectItems var="depa"
+									value="#{reporteController.lstTipoSis}"
+									itemLabel="#{depa.tipoSistema}" itemValue="#{depa.idTiposis}" />
+							</p:selectOneMenu>
+<!-- 								<p:selectBooleanCheckbox value="#{reporteController.asistenciaRemotaBean.checkReg}" itemLabel="Tipo de Atencion" styleClass="ui-label-text2"/> -->
+							<p:selectOneMenu
+								value="#{reporteController.asistenciaRemotaBean.registro}"
+								style="width:200px">
+								<f:selectItem itemLabel="Seleccione" itemValue="0" />
+								<f:selectItem itemLabel="Solicitada" itemValue="1" />
+								<f:selectItem itemLabel="Programada" itemValue="2" />
+							</p:selectOneMenu>
+							
+							<p:commandButton value="Ejecutar Filtro" 
+								 global="false" onclick="PF('WGBuscarAsisRem').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

@@ -1,0 +1,152 @@
+.ui-layout-container {font-size:70%;}
+
+.CabAlingLeft{vertical-align: middle; text-align: left; width:30%}
+.CabAlignMiddle{vertical-align: middle; text-align: center; width:40%}
+.CabAlignRight{vertical-align: bottom; text-align: right; width:30%}
+
+.vAlignMiddle{vertical-align: middle; text-align: center; }
+.vAlignTop{vertical-align: top; text-align: center; }
+
+.vAlignTopLeft{vertical-align: top; text-align: left; }
+.vAlignTopRight{vertical-align: top; text-align: right; }
+
+.alignCenter{text-align: center; }
+.alignLeft{text-align: left; }
+.alignRight{text-align:right; }
+
+.readOnly{
+	background-color: #D8D8D8;
+}
+
+.actividad_registarArticulo_left{
+	width: 400px;
+	display: inline-block;
+}
+
+.actividad_registarArticulo_right{
+	width: 400px;
+	display: inline-block;
+	margin-left: 130px;
+}
+
+.ui-dialog-buttonpane{
+	text-align: center !important;
+}
+
+.ui-label-red-information{
+	color: red;
+	padding-left: 10px;
+	font-size: 10px !important;
+}
+
+.ui-label-required{
+	color: red;
+	font-size: 10px !important;
+	position: inherit;
+}
+
+.ui-row-red{
+	color: red !important;
+	font-size: 10px !important;
+	border-color: inherit !important;
+}
+
+.ui-row-blue{
+	color: #0080FF !important;
+	font-size: 10px !important;
+	border-color: inherit !important;
+}
+
+.ui-row-green{
+	color: #31B404 !important;
+	font-size: 10px !important;
+	border-color: inherit !important;
+}
+
+.ui-label-title{
+	color: #2e6e9e !important;
+	font-size: 12px !important;
+	font-weight: bold;
+}
+
+.ui-datatable-odd {
+    background: none repeat scroll 0 0 #F2F5F9;
+}
+
+.ui-label-text {
+    font-size: 10px; 
+    text-align: left;
+    margin-left: 20px;
+    color: #2e6e9e; 
+    font-weight: bold; 
+}
+
+.ui-label-text2 {
+    font-size: 10px; 
+    text-align: left;
+    color: #2e6e9e; 
+    font-weight: bold; 
+}
+
+.ui-icon-autentication{     
+    background: url('../images/icon/authentication.png') no-repeat top !important;
+	background-position: 0 0 !important;
+}
+
+.title{
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.ui-panel .ui-panel-footer {
+	text-align:  right;
+	font-weight: bold;
+}
+
+.ui-widget-overlay {
+	opacity: 0.8;
+}
+
+.ui-border-panel td{
+    border-style: hidden;
+    padding:  2px 2px 2px 2px;
+}
+.ui-border-panel-title{
+	background: transparent !important; 
+	border: 0px;
+	padding: 0em;
+	border-spacing: 0px !important;
+	border-collapse: inherit !important;
+	border-color: transparent !important;
+}
+
+.ui-growl {  
+	z-index:9999 !important;
+}
+
+.ui-notificationbar{
+	opacity: 0.8;
+	height: 40px;
+	background: #F7F8E0;
+	z-index:9999 !important;
+}
+
+.ui-state-highlight{
+	border: 1px solid #a6c9e2 !important; 
+}
+
+input::-webkit-input-placeholder {
+          color: #2e6e9e !important;
+          opacity: 0.5;
+       }
+       
+#imgLogin {
+	margin-top: 8px;
+	border-radius: 6px;
+	margin-right: 40px;
+	margin-left: 40px;
+	width: 150px;
+	height: 50px;
+	background-color: white;
+	position: absolute;
+}

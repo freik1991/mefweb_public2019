@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmInc">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<!-- 					<p:outputLabel  styleClass="card-title" value="BIENVENIDO: #{loginController.nombre}"/> -->
+						<h1 style="font-size: 36px;">Consulta de Módulos</h1>
+						<!-- 					<h:panelGrid columns="4" cellpadding="5"> -->
+						<!-- 						<p:outputLabel value="Campos:" ></p:outputLabel> -->
+						<!-- 						<p:selectOneMenu style="width:300px"> -->
+						<!-- 							<f:selectItem itemLabel="[Seleccione]" itemValue="" /> -->
+						<!-- 							<f:selectItem itemLabel="Xbox One" itemValue="Xbox One" /> -->
+						<!-- 							<f:selectItem itemLabel="PS4" itemValue="PS4" /> -->
+						<!-- 							<f:selectItem itemLabel="Wii U" itemValue="Wii U" /> -->
+						<!-- 						</p:selectOneMenu> -->
+						<!-- 						<p:inputText value="valor" styleClass="ui-label-text"></p:inputText> -->
+						<!-- 						<p:commandButton value="Agregar"></p:commandButton> -->
+
+						<!-- 					</h:panelGrid> -->
+						<p:commandButton value="Buscar" icon="pi pi-search"	
+							onclick="PF('WGBuscarMod').show();"
+							update="frmBuscarMod,tblModulo"></p:commandButton>
+						<br /> <br />
+						<p:dataTable id="tblModulo" var="asist"
+							value="#{moduloController.lstAsis}"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="true" rows="12"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							currentPageReportTemplate="Página {currentPage} de {totalPages} | Mostrando Registros del {startRecord} al {endRecord} de un Total de {totalRecords}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15"
+							emptyMessage="Ningun Registro encontrado.">
+		
+							<p:column headerText="Descripción" style="width:800px">
+								<h:outputText value="#{asist.moduleName}" />
+							</p:column>
+
+							<p:column headerText="Sistema" style="width: 175px">
+								<h:outputText value="#{asist.systemName}" />
+							</p:column>
+
+							<p:column headerText="Sub Módulo" style="width: 175px">
+								<h:outputText value="Ver Sub Módules" />
+							</p:column>
+
+							
+						</p:dataTable>
+
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarModulo" header="Buscar Modulo"
+				widgetVar="WGBuscarMod" appendTo="@(body)" modal="true"
+				width="800" height="563" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarMod">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+						
+						<h:panelGrid columns="2" cellpadding="2">
+						<p:selectBooleanCheckbox value="#{moduloController.moduloBean.checkModulo}" itemLabel="Modulo:" styleClass="ui-label-text2"/>
+							<p:inputText
+								value="#{moduloController.moduloBean.moduleName}"></p:inputText>
+								
+							<p:selectBooleanCheckbox value="#{moduloController.moduloBean.checkSystem}" itemLabel="Sistema" styleClass="ui-label-text2"/>
+							<p:selectOneMenu
+								value="#{moduloController.moduloBean.system_id}"
+								style="width:200px">
+								<f:selectItem itemLabel="Seleccione" itemValue="0" />
+								<f:selectItem itemLabel="SIAF" itemValue="2" />
+								<f:selectItem itemLabel="SIGA" itemValue="3" />
+								<f:selectItem itemLabel="RENTAS" itemValue="4" />
+							</p:selectOneMenu>	
+						
+							
+							<p:commandButton value="Ejecutar Filtro" 
+								actionListener="#{moduloController.filtroModulo}"  update=":frmInc:tblModulo" process="frmBuscarMod" global="false" onclick="PF('WGBuscarMod').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

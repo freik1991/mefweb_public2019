@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui-paginator a {
+	margin-right: 5px;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+			<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmCap">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Capacitador</h1>
+						<p:growl id="msgs" showDetail="true" />
+
+						<p:dataTable id="tblCapa" var="asist"
+							value="#{capacitadorController.lstAdm}" rowIndexVar="rowIndex"
+							tableStyle="table-layout: auto;" paginator="false" 
+							rowKey="#{asist.idCap}" widgetVar="wgCapa"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							emptyMessage="Ningun Registro encontrado." selectionMode="single"
+							selection="#{capacitadorController.selectItemsAdm}">
+							<f:facet name="header">
+								<div class="ui-g">
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-left:0px !important; text-align:left;">
+											<p:commandButton icon="fa fa-refresh"
+												value="Actualizar Lista" style="width: 200px;"
+												oncomplete="PF('wgCapa').filter()" />
+											<p:spacer width="30" />
+											<h:outputText value="Buscar (*): " />
+											<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px" />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+												value="Buscar por descripción" />
+											<p:commandButton onclick="PF('wgCapa').filter()"
+												icon="pi pi-search" />
+											<p:spacer width="5" />
+											<p:commandButton onclick="PF('wgCapa').clearFilters()"
+												icon="pi pi-ban" />
+										</p:outputPanel>
+									</div>
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-rigth:0px !important;text-align:right;">
+											<p:commandButton value="Añadir Capacitador"
+												actionListener="#{capacitadorController.resetearUser}"
+												update="frmBuscarCap" onclick="PF('WGBuscarCap').show();"
+												icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{capacitadorController.habilitarUser}"
+												onclick="PF('WGBuscarCap').show();" update="frmBuscarCap"
+												process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{capacitadorController.deleteAdmin}"
+												update="tblCapa" oncomplete="PF('wgCapa').filter()"/>
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarCap').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+											<p:spacer width="20" />
+
+										</p:outputPanel>
+									</div>
+								</div>
+							</f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{capacitadorController.selectedAdm}"
+								update=":frmCap:msgs,frmBuscarCap" />
+							<p:column headerText="Nombre" style="width: 700px;"
+								filterBy="#{asist.nombreCap}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.nombreCap}" />
+							</p:column>
+
+							<p:column headerText="Apellido" style="width: 700px;"
+								filterBy="#{asist.apeCap}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.apeCap}" />
+							</p:column>
+
+							<p:column headerText="Dni" style="width: 700px;"
+								filterBy="#{asist.dni}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.dni}" />
+							</p:column>
+
+							<p:column headerText="Correo" style="width: 700px;"
+								filterBy="#{asist.correo}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.correo}" />
+							</p:column>
+							<p:column headerText="Usuario" style="width: 700px;"
+								filterBy="#{asist.correo}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.usuario}" />
+							</p:column>
+							<p:column headerText="Foto" style="width: 700px;">
+								<h:graphicImage style="width:50px;height:50px;"
+									value="#{capacitadorController.getFileArchivo(asist.foto)}" />
+							</p:column>
+							<!-- 							<p:column headerText="Contraseña"> -->
+							<!-- 								<h:outputText value="#{asist.lstAdm}" /> -->
+							<!-- 							</p:column> -->
+							<p:column headerText="Acciones">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarCap').show()" icon="pi pi-eye"
+									update=":frmCap:tblCapa,frmBuscarCap">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{capacitadorController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarCap" header="Capacitador"
+				widgetVar="WGBuscarCap" appendTo="@(body)" modal="true" width="500"
+				height="400" showEffect="face" hideEffect="clip" resizable="false"
+				maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarCap">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+
+						<h:panelGrid columns="2" cellpadding="2">
+							<p:outputLabel value="Nombre:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{capacitadorController.userBean.nombreCap}"
+								readonly="#{capacitadorController.disabledUser}" style="width:300px;"></p:inputText>
+							<p:outputLabel value="Apellidos:" styleClass="ui-label-text2"></p:outputLabel>
+
+							<p:inputText value="#{capacitadorController.userBean.apeCap}"
+								style="width:300px;"
+								readonly="#{capacitadorController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Dni:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{capacitadorController.userBean.dni}"
+								readonly="#{capacitadorController.disabledUser}" style="width:300px;"></p:inputText>
+							<p:outputLabel value="Correo:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{capacitadorController.userBean.correo}"
+								readonly="#{capacitadorController.disabledUser}" style="width:300px;"></p:inputText>
+							<p:outputLabel value="Usuario:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{capacitadorController.userBean.usuario}"
+								readonly="#{capacitadorController.disabledUser}" style="width:300px;"></p:inputText>
+							<p:outputLabel value="Contraseña:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{capacitadorController.userBean.clave}"
+								readonly="#{capacitadorController.disabledUser}" style="width:300px;"></p:inputText>
+
+							<h:graphicImage id="gFoto" style="width:50px;height:50px;"
+									value="#{capacitadorController.userBean.fotografiaEncoder}" />
+							<p:commandButton value="Subir Foto" style="margin-top:3px;"
+								onclick="PF('WGCargarFotografiaAl').show();"></p:commandButton>
+<!-- 							<p:outputLabel value="Estado" styleClass="ui-label-text2"></p:outputLabel> -->
+<!-- 							<p:selectOneMenu value="#{capacitadorController.userBean.estado}" -->
+<!-- 								style="width:200px" -->
+<!-- 								disabled="#{capacitadorController.disabledUser}"> -->
+<!-- 								<f:selectItem itemLabel="Seleccione" itemValue="0" /> -->
+<!-- 								<f:selectItem itemLabel="Activo" itemValue="A" /> -->
+<!-- 								<f:selectItem itemLabel="Inactivo" itemValue="I" /> -->
+<!-- 							</p:selectOneMenu> -->
+							<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{capacitadorController.evaluarMetodo}"
+								process="frmBuscarCap" global="false" update=":frmCap:tblCapa"
+								oncomplete="PF('wgCapa').filter()"  onclick="PF('WGBuscarCap').hide();"></p:commandButton>
+							<p:commandButton value="Cancelar"  style="margin-top:3px;" onclick="PF('WGBuscarCap').hide();"></p:commandButton>
+
+						</h:panelGrid>
+						
+					</p:panel>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="dlgCargarFotografiaAl"
+				header="Cargar Fotografia de Articulo"
+				widgetVar="WGCargarFotografiaAl" resizable="false" showEffect="fade"
+				hideEffect="clip" modal="true" appendTo="@(body)" width="50%"
+				closeOnEscape="true" dynamic="true">
+				<h:form id="frmCargarArticuloAlFoto">
+					<p:growl id="messages" showDetail="true" />
+					<p:fileUpload id="fuCargarFotografia" process="@this"
+						fileUploadListener="#{capacitadorController.handleFileUpload}"
+						mode="advanced" update=":frmCargarArticuloAlFoto:messages,:frmBuscarCap:gFoto"
+						label="Seleccionar Archivo" cancelLabel="Cancelar"
+						uploadLabel="Enviar Archivo"
+						oncomplete="PF('WGCargarFotografiaAl').hide();" />
+
+					<p:separator />
+
+				</h:form>
+
+			</p:dialog>
+
+		</div>
+	</h:body>
+</f:view>
+</html>

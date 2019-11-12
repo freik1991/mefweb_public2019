@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+ .ui-paginator a {
+        margin-right: 5px;
+    }
+    
+/* body .ui-datatable thead th    .ui-column-title{ */
+/*  background-color : white !important!; */
+/* } */
+    
+/*  body .ui-datatable thead th .ui-column-title { */
+/* 	font-weight: bold !important; */
+/* 	color : white !important; */
+/* } */
+/*  body .ui-datatable thead th{  */
+/*           background-color: #3e5367 !important;  */
+        
+/*  }  */
+ 
+ .ui-datatable .ui-datatable-header {
+        text-align: right !important;
+    }
+     
+    .ui-button-text-only .ui-button-text {
+        padding: 0.3em 0.4em;
+    }
+     
+    .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+        visibility: hidden;
+    }
+     
+    .ui-filter-column .ui-column-customfilter .custom-filter {
+        width: 100%;
+        box-sizing: border-box;
+    }
+     
+    .year-spinner input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmSec" style="margin-top:-30px;" >
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+			
+				<h1 style="font-size: 25px;">Sectorista</h1>
+<!-- 						<p:commandButton value="Buscar" onclick="PF('WGBuscarSec').show();" icon="pi pi-search"></p:commandButton> -->
+						<p:growl id="msgs" showDetail="true" />
+			
+						<p:dataTable id="tblSect" var="asist" widgetVar="wgSectorista"
+							value="#{sectoristaController.lstAdm}"
+							 tableStyle="table-layout: auto;"
+							  rowKey="#{asist.idSec}"
+							style="font-size: 12px;text-align:center;padding :5px;"
+							selectionMode="single"
+							selection="#{sectoristaController.selectItemsAdm}"
+							emptyMessage="Ningun Registro encontrado."
+                            >						
+						
+        	<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-left:0px !important; text-align:left;">
+										<p:commandButton
+											icon="fa fa-refresh"
+											value="Actualizar Lista"
+											style="width: 200px;"
+											oncomplete="PF('wgSectorista').filter()" />
+										<p:spacer width="30" />
+										<h:outputText value="Buscar (*): " />
+										<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px"
+												 />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+								            value="Buscar por dni,nombre,apellido,usuario" />
+											<p:commandButton onclick="PF('wgSectorista').filter()"
+												icon="pi pi-search" />
+										<p:spacer width="5" />
+										<p:commandButton
+											onclick="PF('wgSectorista').clearFilters()"
+											icon="pi pi-ban" />
+									</p:outputPanel>
+								</div>
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-rigth:0px !important;text-align:right;">
+										<p:commandButton value="Añadir Sectorista"
+												actionListener="#{sectoristaController.resetearUser}"
+												update="frmBuscarSectorista"
+												onclick="PF('WGBuscarSec').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{sectoristaController.habilitarUser}"
+												onclick="PF('WGBuscarSec').show();"
+												update="frmBuscarSectorista" process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{sectoristaController.deleteAdmin}"  update="tblSect" oncomplete="PF('wgSectorista').filter()"/>
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarSec').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+										<p:spacer width="20" />
+										
+									</p:outputPanel>
+								</div>
+							</div>
+					    </f:facet>
+					    <p:ajax event="rowSelect"
+								listener="#{sectoristaController.selectedAdm}"
+								update=":frmSec:msgs,frmBuscarSectorista" />
+							<p:column headerText="Dni:" style="width: 320px;" filterBy="#{asist.dni}"   filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.dni}" />
+							</p:column>
+
+							<p:column headerText="Nombre" style="width: 320px" filterBy="#{asist.nombreSec}"   filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.nombreSec}" style="width: 75px" />
+							</p:column>
+
+							<p:column headerText="Apellido" style="width: 320px" filterBy="#{asist.apellidoSec}"   filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.apellidoSec}" />
+							</p:column>
+
+							<p:column headerText="Usuario" style="width: 320px" filterBy="#{asist.usuSec}"   filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText
+									value="#{asist.usuSec}" />
+							</p:column>
+<!-- 							<p:column headerText="Estado" style="width: 320px" > -->
+<!-- 								<h:outputText -->
+<!-- 									value="#{asist.estado eq 'A' ? 'Activo' : 'Inactivo'}" /> -->
+<!-- 							</p:column> -->
+<!-- 							<p:column headerText="Contraseña" style="width: 200px" filterBy="#{asist.password}"   filterMatchMode="contains"> -->
+<!-- 								<h:outputText value="#{asist.password}" /> -->
+<!-- 							</p:column> -->
+							
+							<p:column headerText="Acciones" style="width:35px">
+                           	<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarSec').show()" icon="pi pi-eye"
+									update=":frmSec:tblSect,frmBuscarSectorista">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{sectoristaController.selectItemsAdm}" />
+
+								</p:commandButton>
+                           		
+                          </p:column>
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarSec" header="Sectorista"
+				widgetVar="WGBuscarSec" appendTo="@(body)" modal="true"
+				width="500" height="320" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false" >
+
+				<h:form id="frmBuscarSectorista">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					<h:panelGrid columns="2" cellpadding="2">	
+					<p:outputLabel value="Dni:" styleClass="ui-label-text2"></p:outputLabel>	   
+							<p:inputText
+								value="#{sectoristaController.userBean.dni}" readonly="#{sectoristaController.disabledUser}"></p:inputText>
+						 
+						<p:outputLabel value="Nombre:" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText style="width:300px;"
+								value="#{sectoristaController.userBean.nombreSec}" readonly="#{sectoristaController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Apellidos" styleClass="ui-label-text2" ></p:outputLabel>    
+						    
+						<p:inputText
+								value="#{sectoristaController.userBean.apellidoSec}" style="width:300px;" readonly="#{sectoristaController.disabledUser}"></p:inputText>
+								<p:outputLabel value="Usuario:" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{sectoristaController.userBean.usuSec}" readonly="#{sectoristaController.disabledUser}"></p:inputText>
+								<p:outputLabel value="Contraseña" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{sectoristaController.userBean.contSec}" readonly="#{sectoristaController.disabledUser}"></p:inputText>	
+						
+<!-- 						<p:outputLabel value="Estado" styleClass="ui-label-text2" rendered="#{sectoristaController.displayEstado}"></p:outputLabel> -->
+<!-- 							<p:selectOneMenu value="#{sectoristaController.userBean.estado}" rendered="#{sectoristaController.displayEstado}" -->
+<!-- 								style="width:200px" disabled="#{sectoristaController.disabledUser}"> -->
+<!-- 								<f:selectItem itemLabel="Seleccione" itemValue="0" /> -->
+<!-- 								<f:selectItem itemLabel="Activo" itemValue="A" /> -->
+<!-- 								<f:selectItem itemLabel="Inactivo" itemValue="I" /> -->
+<!-- 							</p:selectOneMenu> -->
+							<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{sectoristaController.evaluarMetodo}"
+								process="frmBuscarSectorista"
+								 global="false"
+								update=":frmSec:tblSect" oncomplete="PF('wgSectorista').filter()"  onclick="PF('WGBuscarSec').hide();"></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;" onclick="PF('WGBuscarSec').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

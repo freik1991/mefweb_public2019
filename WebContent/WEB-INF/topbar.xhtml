@@ -1,0 +1,278 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pa="http://primefaces.org/barcelona">
+
+	<h:head>
+
+		<title>MEF - Reporte de Asistencias Técnicas</title>
+		<style type="text/css">
+.card {
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0
+		rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+	-webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0
+		rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+	-moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0
+		rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	background: #ffffff;
+	padding: 16px;
+	margin-bottom: 16px;
+	box-sizing: border-box;
+}
+
+.card .card-title {
+	font-size: 20px !important;
+	font-weight: bold !important;
+	margin-top: 0 !important;
+	color: #333 !important;
+}
+
+.quitarEstilo {
+	moz-border-radius: unset !important;
+	-webkit-border-radius: unset !important;
+	border-radius: unset !important;
+}
+
+body .quitarEstilo .ui-menuitem-icon {
+	color: #dd0000 !important;
+}
+
+.colorRED {
+	background-color: #FFC7CE !important;
+	color: #9C0006 !important;
+}
+
+.colorORANGE {
+	background-color: #ffedc0 !important;
+	color: #9C6500 !important;
+}
+
+.bordernone tbody tr td {
+	border: none !important;
+}
+
+.navbar-brand {
+	float: left;
+	padding: 15px 15px;
+	font-size: 18px;
+	height: 50px;
+	color: green !important;
+}
+
+/* .ui-state-hover{ */
+/* background: blue !important; */
+/* } */
+ui-menuitem-link ui-corner-all .ui-state-hover {
+	background: blue !important;
+}
+
+.ui-menuitem-link.ui-state-hover {
+	background: blue !important;
+}
+
+.ui-menuitem-text {
+	color: white !important;
+}
+
+.ui-menuitem-active {
+	background: blue !important;
+}
+
+/* .ui-menuitem .ui-widget .ui-corner-all{ */
+/* background: black !important; */
+/* } */
+
+/* body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-icon */
+/* 	{ */
+/* 	color: unset; */
+/* } */
+</style>
+	</h:head>
+
+	<div class="topbar" style="margin: 0px; padding: 0px; width: 100%;">
+		<h:form id="frmMessages">
+			<p:growl id="messages" showDetail="true" globalOnly="true"
+				widgetVar="wgvMessages" life="6000" />
+		</h:form>
+		<h:form id="frmconfim">
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Si" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+		<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide()" />
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<i class="pi pi-spin pi-spinner ajax-loader" aria-hidden="true"
+				style="font-size: 3em"></i>
+		</p:dialog>
+
+		<h:form>
+			<p:menubar styleClass="navbar navbar-inverse"
+				style="background:black;color:white;">
+				<p:menuitem styleClass="navbar-brand" value="Home" url="#" />
+				<p:submenu style="font-size: 15px !important;"
+					label="Administración" outcome="display.jsf" rendered="#{loginController.menuAdm}">
+					<p:menuitem value="Administrador"
+						action="#{genericController.listaAdministrador}"
+						style="background-color:black;display : #{loginController.smenuAdm}" />
+					<p:separator style="display : #{loginController.smenuAdm}" />
+					<p:menuitem value="Sectorista"
+						action="#{sectoristaController.listaSectorista}"
+						style="background-color:black;display : #{loginController.smenuAdm}" />
+					<p:separator style="display : #{loginController.smenuAdm}"/>
+					<p:menuitem value="Capacitador"
+						action="#{capacitadorController.listaCapacitador}"
+						style="background-color:black;display : #{loginController.smenuAdm}" />
+					<p:separator style="display : #{loginController.smenuAdm}"/>
+					<p:menuitem value="Implantador"
+						action="#{implantadorController.listaImplantador}"
+						style="background-color:black;display : #{loginController.smenuImp}"/>
+					<p:separator style="display : #{loginController.smenuImp}"/>
+					<p:menuitem value="Entidad"  action="#{entidadController.listaEntidad}"
+						style="background-color:black;display : #{loginController.smenuEnt}"/>
+					<p:separator style="display : #{loginController.smenuEnt}"/>
+					<p:menuitem value="Tipo UE"
+						action="#{tipoUeController.listaTipoUe}"
+						style="background-color:black;display : #{loginController.smenuAdm}"/>
+					<p:separator style="display : #{loginController.smenuAdm}"/>
+					<p:menuitem value="Geozona"
+						action="#{genericController.listaGeozona}"
+						style="background-color:black;display : #{loginController.smenuAdm}">
+					</p:menuitem>
+					<p:separator style="display : #{loginController.smenuAdm}"/>
+					<!-- 					<p:menuitem value="Ubigeo" action="#{genericController.listaAdministrador}"  style="background-color:black;"/> -->
+					<!-- 					<p:separator /> -->
+					<p:menuitem value="Tipo de Visita"
+						action="#{tipoVisitaController.listaTipoVisita}"
+						style="background-color:black;display : #{loginController.smenuAdm}"/>
+					<p:separator style="background-color:white;display : #{loginController.smenuAdm}"/>
+					<p:separator style="background-color:white;display : #{loginController.smenuAdm}"/>
+					
+					<p:menuitem value="Tipo de Sistema"
+						action="#{tipoSistemaController.listaTipoSistema}"
+						style="background-color:black;display : #{loginController.smenuAdm}" />
+					<p:separator style="background:white;display : #{loginController.smenuAdm}"/>
+					<p:menuitem value="Modulos"
+						action="#{moduloController.listaModulo}"
+						style="background-color:black;display : #{loginController.smenuAdm}" />
+					<p:separator style="display : #{loginController.smenuAdm}" />
+					<p:menuitem value="Sub Modulos"
+						action="#{subModuloController.listaSubModulo}"
+						style="background-color:black;display : #{loginController.smenuAdm}" />
+					<p:separator style="display : #{loginController.smenuAdm}" />
+					<p:menuitem value="Modalidad"
+						action="#{modalidadController.listaModalidad}"
+						style="background-color:black;display : #{loginController.smenuAdm}" />
+					<p:separator style="display : #{loginController.smenuAdm}"/>
+					<p:menuitem value="Tipo de local"
+						action="#{tipoLocalController.listaTipoLocal}"
+						style="background-color:black;display : #{loginController.smenuAdm}"/>
+					<p:separator style="display : #{loginController.smenuAdm}"/>
+					<p:menuitem value="Motivo" action="#{motivoController.listaMotivo}"
+						style="background-color:black;display : #{loginController.smenuAdm}"/>
+					<p:separator style="display : #{loginController.smenuAdm}"/>
+					<!-- 					<p:menuitem value="Consulta Entidades/Geozonas" url="entidad.jsf" style="background-color:black;"/> -->
+					<!-- 					<p:separator /> -->
+					<!-- 					<p:menuitem value="Consulta y Edición de usuarios" url="usuario.jsf" style="background-color:black;"/> -->
+					<!-- 					<p:separator /> -->
+					<!-- 					<p:menuitem value="Consulta y Edición de Módulos" url="modulo.jsf" style="background-color:black;"/> -->
+
+				</p:submenu>
+				<p:submenu style="font-size: 15px !important;background-color:black"
+					label="Reportes" outcome="gps.jsf" rendered="#{loginController.menuRepo}">
+					<p:menuitem value="Calidad de Servicio Remota"
+						action="#{reporteController.listaAsistenciaRemota}"
+						style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Calidad de Servicio Presencial"
+						action="#{reporteController.listaServicioPresencial}" style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Reporte de Evaluación Atención - Incidencias"
+						action="#{reporteController.listaEvaluacionTecnica}" style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Reporte de Evaluación Remota - Asistencia Técnica"
+						action="#{reporteController.listaEvaluacionRemota}" style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Resumen de Visitas - Encuesta Remota" 
+					action="#{reporteController.listaResumen}"	style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Resumen General Departamento"
+						url="encuestaRemota.jsf" style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Resumen General" url="visitas.jsf"
+						style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Reporte de Cronograma" url="resumenGeneral.jsf"
+						style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Reporte de Otras Actividades"
+						url="resumenGeneral.jsf" style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Reporte de Capacitación"
+						url="resumenGeneral.jsf" style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Resumen de Capacitaciones"
+						url="resumenGeneral.jsf" style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Reporte de Circuito" url="resumenGeneral.jsf"
+						style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Reporte de Modulos" url="resumenGeneral.jsf"
+						style="background-color:black;" />
+					<p:separator />
+					<p:menuitem value="Reporte de Promedios" url="resumenGeneral.jsf"
+						style="background-color:black;" />
+				</p:submenu>
+				<p:submenu style="font-size: 15px !important;" label="Configuración"
+					outcome="display.jsf" rendered="#{loginController.menuConf}">
+
+					<p:menuitem value="Plantilla de Evaluación" url="entidad.jsf"
+						style="background-color:black;" />
+
+				</p:submenu>
+
+				<p:menuitem value="Capacitaciones" action="#{capacitacionController.listaCapacitador}" 
+					style="background-color:black;" rendered="#{loginController.menuCap}"/>
+				<p:menuitem value="Cronograma" rendered="#{loginController.menuCrono}"
+					style="background-color:black;" action="#{cronogramaController.listaCronograma}" />
+				<p:submenu style="font-size: 15px !important;" label="Asistencias"
+				action="#{cronogramaController.listaCronograma}" rendered="#{loginController.menuAsis}">
+					<p:menuitem value="Asistencia Presencial" 
+					action="#{asistenciaTecController.listarAsistenciaTec}"	style="background-color:black;display : #{loginController.smenuAsisP}"/>
+					<p:menuitem value="Asistencia Remotas" 
+				 action="#{asistenciaRemotaController.listarAsistenciaRem}"	style="background-color:black;display : #{loginController.smenuAsisRe}" />
+				</p:submenu>
+
+				<p:menuitem value="Otras Actividades" action="#{actividadController.listaActividad}"
+					style="background-color:black;" rendered="#{loginController.menuActi}"/>
+				<f:facet name="options">
+					<!-- 					<p:themeSwitcher id="basic" -->
+					<!-- 						style="width:165px; vertical-align: middle;  margin-bottom:2px; margin-right:15px;" -->
+					<!-- 						value="#{loginController.selectThemes}"> -->
+					<!-- 						<p:ajax listener="#{loginController.changePerfil}" /> -->
+					<!-- 						<f:selectItems value="#{loginController.themes}" var="theme" -->
+					<!-- 							itemLabel="#{theme.displayName}" itemValue="#{theme.name}" /> -->
+					<!-- 					</p:themeSwitcher> -->
+					<div style="margin-top: 8px;">
+						<p:outputLabel value="Usuario:"></p:outputLabel>
+						<p:outputLabel value="#{loginController.nombre}"
+							style="margin-right:20px;"></p:outputLabel>
+
+						<p:commandLink actionListener="#{loginController.cerrarSession()}"
+							value="Salir" icon="pi pi-sign-out" iconPos="right" />
+					</div>
+				</f:facet>
+			</p:menubar>
+		</h:form>
+	</div>
+
+</ui:composition>

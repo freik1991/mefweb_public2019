@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui-paginator a {
+	margin-right: 5px;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+			<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmAdm" style="margin-top:-30px;">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Administrador</h1>
+						<p:growl id="msgs" showDetail="true" />
+
+						<p:dataTable id="tblAdm" var="asist" widgetVar="wgAdm"
+							value="#{genericController.lstAdm}"
+							tableStyle="table-layout: auto;" rowKey="#{asist.iduser}"
+							paginator="false" 
+							style="font-size: 12px;text-align:center;padding :5px,"
+							selectionMode="single"
+							selection="#{genericController.selectItemsAdm}">
+							<f:facet name="header">
+								<div class="ui-g">
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-left:0px !important; text-align:left;">
+											<p:commandButton icon="fa fa-refresh"
+												value="Actualizar Lista" style="width: 200px;"
+												oncomplete="PF('wgAdm').filter()" />
+											<p:spacer width="30" />
+											<h:outputText value="Buscar (*): " />
+											<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px" />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+												value="Buscar por dni,nombre,apellido,usuario" />
+											<p:commandButton onclick="PF('wgAdm').filter()"
+												icon="pi pi-search" />
+											<p:spacer width="5" />
+											<p:commandButton onclick="PF('wgAdm').clearFilters()"
+												icon="pi pi-ban" />
+										</p:outputPanel>
+									</div>
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-rigth:0px !important;text-align:right;">
+											<p:commandButton value="Añadir Administrador"
+												actionListener="#{genericController.resetearUser}"
+												update="frmBuscarAdministrador"
+												onclick="PF('WGBuscarAdm').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{genericController.habilitarUser}"
+												onclick="PF('WGBuscarAdm').show();"
+												update="frmBuscarAdministrador" process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{genericController.deleteAdmin}" update="tblAdm" />
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarAdm').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+											<p:spacer width="20" />
+
+										</p:outputPanel>
+									</div>
+								</div>
+							</f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{genericController.selectedAdm}"
+								update=":frmAdm:msgs,frmBuscarAdministrador" />
+							<p:column headerText="Dni" style="width: 450px"
+								filterBy="#{asist.dni}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.dni}" />
+							</p:column>
+
+							<p:column headerText="Nombre" style="width: 450px"
+								filterBy="#{asist.nombre_use}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.nombre_use}" />
+							</p:column>
+
+							<p:column headerText="Apellido" style="width: 450px"
+								filterBy="#{asist.nombre_use}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.apellido_use}" />
+							</p:column>
+
+							<p:column headerText="Usuario" style="width: 450px"
+								filterBy="#{asist.username}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.username}" />
+							</p:column>
+<!-- 							<p:column headerText="Estado" style="width: 450px"> -->
+<!-- 								<h:outputText -->
+<!-- 									value="#{asist.estado eq 'A' ? 'Activo' : 'Inactivo'}" /> -->
+<!-- 							</p:column> -->
+							<!-- 							<p:column headerText="Contraseña" style="width: 250px" filterBy="#{asist.dni_boss}"   filterMatchMode="contains" filterStyle="display:none;"> -->
+							<!-- 								<h:outputText value="#{asist.contrasena}" /> -->
+							<!-- 							</p:column> -->
+							<p:column headerText="Acciones">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarAdm').show()" icon="pi pi-eye"
+									action="#{genericController.vistaUser}"
+									update=":frmAdm:tblAdm,frmBuscarAdministrador">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{genericController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarAdm" header=" Administrador"
+				widgetVar="WGBuscarAdm" appendTo="@(body)" modal="true" width="480"
+				height="330" showEffect="face" hideEffect="clip" resizable="false"
+				maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarAdministrador">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+						<h:panelGrid columns="2" cellpadding="2">
+							<p:outputLabel value="Dni:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{genericController.userBean.dni}"
+								readonly="#{genericController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Nombre:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{genericController.userBean.nombre_use}"
+								readonly="#{genericController.disabledUser}" style="width:300px;"></p:inputText>
+							<p:outputLabel value="Apellidos:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{genericController.userBean.apellido_use}"
+								style="width:300px;"
+								readonly="#{genericController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Usuario:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{genericController.userBean.username}"
+								readonly="#{genericController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Contraseña:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{genericController.userBean.contrasena}"
+								readonly="#{genericController.disabledUser}"></p:inputText>
+
+<!-- 							<p:outputLabel value="Estado:" styleClass="ui-label-text2" -->
+<!-- 								rendered="#{genericController.displayEstado}"></p:outputLabel> -->
+<!-- 							<p:selectOneMenu value="#{genericController.userBean.estado}" -->
+<!-- 								rendered="#{genericController.displayEstado}" -->
+<!-- 								style="width:200px" disabled="#{genericController.disabledUser}"> -->
+<!-- 								<f:selectItem itemLabel="Seleccione" itemValue="0" /> -->
+<!-- 								<f:selectItem itemLabel="Activo" itemValue="A" /> -->
+<!-- 								<f:selectItem itemLabel="Inactivo" itemValue="I" /> -->
+<!-- 							</p:selectOneMenu> -->
+
+							<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{genericController.evaluarMetodo}"
+								process="frmBuscarAdministrador" global="false"
+								oncomplete="PF('wgAdm').filter()" onclick="PF('WGBuscarAdm').hide();"></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;" onclick="PF('WGBuscarAdm').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

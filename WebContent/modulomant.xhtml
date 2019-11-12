@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+ .ui-paginator a {
+        margin-right: 5px;
+    }
+    
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+	color : white !important;
+}
+ body .ui-datatable thead th{ 
+          background-color: #3e5367 !important; 
+        
+ } 
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmMod">
+				<div class="ui-g-12">
+					<div class="" style="height: 100%">
+						<h1 style="font-size: 25px;">Modulo</h1>
+	           						<p:growl id="msgs" showDetail="true" />
+
+						<p:dataTable id="tblModulo" var="asist" widgetVar="wgModulo"
+							value="#{moduloController.lstAsis}"
+							rowIndexVar="rowIndex"  tableStyle="table-layout: auto;"
+							paginator="false" rows="10" rowKey="#{asist.id}"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							selectionMode="single"
+							selection="#{moduloController.selectItemsAdm}"
+                            >						
+						<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-left:0px !important; text-align:left;">
+										<p:commandButton
+											icon="fa fa-refresh"
+											value="Actualizar Lista"
+											style="width: 200px;"
+											oncomplete="PF('wgModulo').filter()" />
+										<h:outputText value="Buscar (*): " />
+										<p:spacer width="25" />
+										<p:inputText
+											id="globalFilter"
+											style="width:180px"
+											placeholder="Ingrese un ID" />
+										<p:spacer width="10px" />
+										<p:commandButton
+											onclick="PF('wgModulo').filter()"
+											icon="pi pi-search" /> 
+										<p:spacer width="5" />
+										<p:commandButton
+											onclick="PF('wgModulo').clearFilters()"
+											icon="pi pi-ban" />
+									</p:outputPanel>
+								</div>
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-rigth:0px !important;text-align:right;">
+									<p:commandButton value="Añadir Modulo"
+												actionListener="#{moduloController.resetearUser}"
+												update="frmBuscarMod"
+												onclick="PF('WGBuscarMod').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{moduloController.habilitarUser}"
+												onclick="PF('WGBuscarMod').show();"
+												update="frmBuscarMod" process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{moduloController.deleteAdmin}" update="tblModulo" 
+												oncomplete="PF('wgModulo').filter()"  />
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarMod').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+										<p:spacer width="20" />
+									</p:outputPanel>
+								</div>
+							</div>
+					    </f:facet>
+					      <p:ajax event="rowSelect"
+								listener="#{moduloController.selectedAdm}"
+								update=":frmMod:msgs,frmBuscarMod" />
+							<p:column headerText="Descripción" style="width:750px;" filterBy="#{asist.moduleName}"   filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.moduleName}" />
+							</p:column>
+
+							<p:column headerText="Tipo de Sistema" style="width:750px;" filterBy="#{asist.systemName}"   filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.systemName}"  />
+							</p:column>
+
+							<p:column headerText="Acciones" style="width:50px;">
+                               <p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarMod').show()" icon="pi pi-eye"
+									update=":frmMod:tblModulo,frmBuscarMod">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{moduloController.selectItemsAdm}" />
+
+								</p:commandButton>							</p:column>
+
+							
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarMod" header="Modulo"
+				widgetVar="WGBuscarMod" appendTo="@(body)" modal="true"
+				width="400" height="180" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarMod">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					
+						<h:panelGrid columns="2">	 
+						<p:outputLabel value="Descripción:" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{moduloController.moduloBean.moduleName}" readonly="#{moduloController.disabledUser}"></p:inputText>
+						<p:outputLabel value="Tipo de Sistema:" styleClass="ui-label-text2" ></p:outputLabel>    
+						 <p:selectOneMenu value="#{moduloController.moduloBean.system_id}" 
+								style="width:200px" disabled="#{moduloController.disabledUser}">
+								<f:selectItem itemLabel="Seleccione" itemValue="0" />
+								<f:selectItem itemLabel="SIAF" itemValue="2" />
+								<f:selectItem itemLabel="SIGA" itemValue="3" />
+								<f:selectItem itemLabel="SRTM" itemValue="4" />
+								
+							</p:selectOneMenu>
+							<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{moduloController.evaluarMetodo}"
+								process="frmBuscarMod"
+								 global="false"
+								update=":frmMod:tblModulo" oncomplete="PF('wgModulo').filter()"  onclick="PF('WGBuscarMod').hide();"></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;" onclick="PF('WGBuscarMod').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

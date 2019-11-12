@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui-paginator a {
+	margin-right: 5px;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+	color: white !important;
+}
+
+body .ui-datatable thead th {
+	background-color: #3e5367 !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+			<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmEntidad">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Entidad</h1>
+						<p:growl id="msgs" showDetail="true" />
+
+						<p:dataTable id="tblEnt" var="asist" widgetVar="wgEntidad"
+							value="#{entidadController.lstAsis}" rowIndexVar="rowIndex"
+							tableStyle="table-layout: auto;" paginator="false" rows="5"
+							rowKey="#{asist.id}"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							selectionMode="single"
+							selection="#{entidadController.selectItemsAdm}">
+							<f:facet name="header">
+								<div class="ui-g">
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-left:0px !important; text-align:left;">
+											<p:commandButton icon="fa fa-refresh"
+												value="Actualizar Lista" style="width: 200px;"
+												oncomplete="PF('wgEntidad').filter()" />
+											<p:spacer width="30" />
+											<h:outputText value="Buscar (*): " />
+											<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px" />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+												value="Buscar por secejec,nombre,sectorista..." />
+											<p:commandButton onclick="PF('wgEntidad').filter()"
+												icon="pi pi-search" />
+											<p:spacer width="5" />
+											<p:commandButton onclick="PF('wgEntidad').clearFilters()"
+												icon="pi pi-ban" />
+										</p:outputPanel>
+									</div>
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-rigth:0px !important;text-align:right;display : #{entidadController.displayButtonE}">
+											<p:commandButton value="Añadir Entidad"
+												actionListener="#{entidadController.resetearUser}"
+												update="frmBuscarEnt" onclick="PF('WGBuscarEnt').show();"
+												icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{entidadController.habilitarUser}"
+												onclick="PF('WGBuscarEnt').show();" update="frmBuscarEnt"
+												process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{entidadController.deleteAdmin}" update="tblEnt" oncomplete="PF('wgEntidad').filter()" />
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarEnt').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+											<p:spacer width="20" />
+
+										</p:outputPanel>
+									</div>
+								</div>
+							</f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{entidadController.selectedAdm}"
+								update=":frmEntidad:msgs,frmBuscarEnt" />
+							<p:column headerText="Sec Ejec" filterBy="#{asist.unit_secEjec}"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.unit_secEjec}" />
+							</p:column>
+
+							<p:column headerText="Nombre" style="width: 175px"
+								filterBy="#{asist.unit_unitname}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.unit_unitname}" />
+							</p:column>
+							<p:column headerText="Descripción" style="width: 175px"
+								filterBy="#{asist.unit_unitdescription}"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.unit_unitdescription}" />
+							</p:column>
+							<p:column headerText="Ubigeo" style="width: 175px">
+								<h:outputText
+									value="#{genericController.Ubigeo(asist.depa,asist.district,asist.province)}" />
+							</p:column>
+							<p:column headerText="Dirección" filterBy="#{asist.address}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width: 175px">
+								<h:outputText value="#{asist.address}" />
+							</p:column>
+
+							<p:column headerText="Tipo UE" filterBy="#{asist.unitType}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width: 175px">
+								<h:outputText value="#{asist.unitType}" />
+							</p:column>
+							<p:column headerText="Sectorista"
+								filterBy="#{asist.sectorist_names}" filterMatchMode="contains"
+								filterStyle="display:none;" style="width: 175px">
+								<h:outputText value="#{asist.sectorist_names}" />
+							</p:column>
+
+							<p:column headerText="Nombre de Representante"
+								filterBy="#{asist.representativeName}" style="width: 175px"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.representativeName}" />
+							</p:column>
+
+							<p:column headerText="Geozona" filterBy="#{asist.geozoneName}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width: 175px">
+								<h:outputText value="#{asist.geozoneName}" />
+							</p:column>
+<!-- 							<p:column headerText="Estado" filterBy="#{asist.status}" -->
+<!-- 								filterMatchMode="contains" filterStyle="display:none;" -->
+<!-- 								style="width: 175px"> -->
+<!-- 								<h:outputText value="#{asist.status eq 'A' ? 'activo' :''}" /> -->
+<!-- 							</p:column> -->
+
+							<p:column headerText="Editar Geozona" style="width: 175px">
+								<p:commandButton type="button" title="edit"
+									 icon="pi pi-pencil"
+									>
+									
+								</p:commandButton>
+							</p:column>
+							<p:column headerText="Acciones" style="width: 75px">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarEnt').show()" icon="pi pi-eye"
+									update=":frmEntidad:tblEnt,frmBuscarEnt">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{entidadController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarEnt" header="Entidad"
+				widgetVar="WGBuscarEnt" appendTo="@(body)" modal="true" width="1000"
+				height="540" showEffect="face" hideEffect="clip" maximizable="false"
+				minimizable="false">
+
+				<h:form id="frmBuscarEnt">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+
+						<h:panelGrid columns="4" cellpadding="4">
+							<p:outputLabel value="Entidad secejec:"
+								styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText
+								value="#{entidadController.entidadBean.unit_secEjec}"
+								readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Nombre:" styleClass="ui-label-text2"></p:outputLabel>
+
+							<p:inputText
+								value="#{entidadController.entidadBean.unit_unitname}"
+								style="width:300px;"
+								readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Dirección:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{entidadController.entidadBean.address}"
+								readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Tipo UE:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu style="width:200px" panelStyle="width : 200px;"
+								value="#{entidadController.entidadBean.unitType}"
+								disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec" value="#{entidadController.lstTipoUe}"
+									itemLabel="#{sec.descripcion}" itemValue="#{sec.descripcion}" />
+							</p:selectOneMenu>
+							<p:outputLabel value="Sectorista:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu style="width:200px" panelStyle="width : 200px;"
+								value="#{entidadController.entidadBean.sectorist_id}"
+								disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec"
+									value="#{entidadController.lstSectorista}"
+									itemLabel="#{sec.nombreSec}" itemValue="#{sec.idSec}" />
+							</p:selectOneMenu>
+							<p:outputLabel value="Nombre de Representante:"
+								styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText style="width:300px;"
+								value="#{entidadController.entidadBean.representativeName}"
+								readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Correo:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText
+								value="#{entidadController.entidadBean.representativeEmail}"
+								readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Cargo:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText style="width:300px;"
+								value="#{entidadController.entidadBean.representativePosition}"
+								readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Telefono:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText
+								value="#{entidadController.entidadBean.representativePhone}"
+								readonly="#{entidadController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Geozona:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:selectOneMenu style="width:300px" panelStyle="width : 300px;"
+								value="#{entidadController.entidadBean.locality}"
+								disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec" value="#{entidadController.lstGeozona}"
+									itemLabel="#{sec.geozoneName}" itemValue="#{sec.geozoneName}" />
+							</p:selectOneMenu>
+												<p:outputLabel value="Estado" styleClass="ui-label-text2" ></p:outputLabel>
+							<p:selectOneMenu value="#{entidadController.entidadBean.status}"
+								style="width:200px" disabled="#{entidadController.disabledUser}">
+								<f:selectItem itemLabel="Seleccione" itemValue="0" />
+								<f:selectItem itemLabel="Activo" itemValue="A" />
+								<f:selectItem itemLabel="Inactivo" itemValue="I" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+						<h:panelGroup layout="block" id="container">
+							<h:panelGrid columns="3" cellpadding="4">
+								
+								<p:panel header="Ubigeo">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="Departamento"
+											styleClass="ui-label-text2"></p:outputLabel>
+										<p:selectOneMenu style="width:200px"
+											panelStyle="width : 200px;"
+											value="#{entidadController.entidadBean.depa}"
+											disabled="#{entidadController.disabledUser}">
+											<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+											<f:selectItems var="sec"
+												value="#{entidadController.lstDepaUbi}"
+												itemLabel="#{sec.name}" itemValue="#{sec.id}" />
+											<p:ajax listener="#{entidadController.listarProvincia()}"
+												update="cbProvincia" />
+
+										</p:selectOneMenu>
+										<p:outputLabel value="Provincia" styleClass="ui-label-text2"></p:outputLabel>
+										<p:selectOneMenu id="cbProvincia" style="width:200px"
+											panelStyle="width : 200px;"
+											value="#{entidadController.entidadBean.province}"
+											disabled="#{entidadController.disabledUser}">
+											<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+											<f:selectItems var="sec"
+												value="#{entidadController.lstProvUbi}"
+												itemLabel="#{sec.nameprov}" itemValue="#{sec.mefprov}" />
+											<p:ajax listener="#{entidadController.listarDistrito()}"
+												update="cbDistrito" />
+
+										</p:selectOneMenu>
+										<p:outputLabel value="Distrito" styleClass="ui-label-text2"></p:outputLabel>
+										<p:selectOneMenu id="cbDistrito" style="width:200px"
+											panelStyle="width : 200px;"
+											value="#{entidadController.entidadBean.district}"
+											disabled="#{entidadController.disabledUser}">
+											<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+											<f:selectItems var="sec"
+												value="#{entidadController.lstDistUbi}"
+												itemLabel="#{sec.name}" itemValue="#{sec.mefid}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+								</p:panel>
+							</h:panelGrid>
+
+
+						</h:panelGroup>
+							<br></br>
+					<p:commandButton value="Guardar" style="margin-top:3px;"
+						actionListener="#{entidadController.evaluarMetodo}"
+						process="frmBuscarEnt" global="false" update=":frmEntidad:tblEnt"
+						oncomplete="PF('wgEntidad').filter()"   onclick="PF('WGBuscarEnt').hide();"></p:commandButton>
+					<p:commandButton value="Cancelar" style="margin-top:3px;" onclick="PF('WGBuscarEnt').hide();"></p:commandButton>
+						
+					</p:panel>
+
+				
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

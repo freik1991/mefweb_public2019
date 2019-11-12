@@ -1,0 +1,304 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view >
+
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px; ">
+			<ui:include src="WEB-INF/topbar.xhtml"/>
+			<div class="ui-g-12">
+				<div class="card" style="height: 100%">
+					<p:outputLabel  styleClass="card-title" value="CONTROL DE TARJETA CHIP" />
+					<p:separator  styleClass="card-title" />
+					<h:form id="frmChip">
+					<p:dataTable
+						id="dtbChip" 
+						var="chip" 
+						value="#{chipController.listChip}"
+						widgetVar="wgvListchip"
+						filteredValue="#{chipController.filterListChip}"
+						style="text-align: center;"
+						rows="50"
+						paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowIndexVar="index"
+						rowStyleClass="#{chip.chipStatusID eq 3?'colorRED':(chip.chipStatusID eq 2?'colorORANGE':null)}"
+						rowsPerPageTemplate="50,100,150"
+						paginatorPosition="bottom"
+						emptyMessage="0 registros...!!!">
+						<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-left:0px !important; text-align:left;">
+										<p:commandButton
+											icon="fa fa-refresh"
+											value="Actualizar Lista"
+											style="width: 200px;"
+											actionListener="#{chipController.init}"
+											update=":frmChip:dtbChip :frmMessages:messages"
+											oncomplete="PF('wgvListchip').filter()" />
+										<p:spacer width="30" />
+										<h:outputText value="Buscar (*): " />
+										<p:spacer width="5" />
+										<p:inputText
+											id="globalFilter"
+											style="width:180px"
+											placeholder="Ingrese un ESN" />
+										<p:spacer width="10px" />
+										<p:commandButton
+											onclick="PF('wgvListchip').filter()"
+											icon="pi pi-search" /> 
+										<p:spacer width="5" />
+										<p:commandButton
+											onclick="PF('wgvListchip').clearFilters()"
+											icon="pi pi-ban" />
+									</p:outputPanel>
+								</div>
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-rigth:0px !important;text-align:right;">
+										<p:commandButton
+											icon="fa fa-plus"
+											value="Nuevo CHIP"
+											oncomplete="PF('wgvNewChip').show();"
+											title="Nuevo CHIP"
+											style="margin-right:0px; bottom:5px; width:auto;"
+											actionListener="#{chipController.voidNewChip}"
+											update=":frmNewChip:oppNewChip :frmMessages:messages"/>
+										<p:spacer width="20" />
+										
+										<h:commandLink>
+											<p:graphicImage
+												url="/images/excel.png"
+												width="24" />
+											<p:dataExporter
+												type="xls"
+												target="dtbChip"
+												fileName="Chip" />
+										</h:commandLink>
+										<p:spacer width="20" />
+										
+									</p:outputPanel>
+								</div>
+							</div>
+					    </f:facet>
+						
+					
+					    <p:column headerText="CHIPID" width="60"><h:outputText value="#{chip.chipID}" /></p:column>
+					    <p:column headerText="SIM *" width="120"
+					    		filterBy="#{chip.sim}"
+								filterStyle="display: none; visibility: hidden;">
+								<h:outputText value="#{chip.sim}" /></p:column>
+					    <p:column headerText="ICCID *" width="140"
+					    		filterBy="#{chip.iccid}"
+								filterStyle="display: none; visibility: hidden;">
+								<h:outputText value="#{chip.iccid}" /></p:column>
+					    <p:column headerText="Proveedor" width="140" style="white-space:nowrap; text-align:center;"><h:outputText value="#{chip.supplierName}" /></p:column>
+					    <p:column headerText="CHIP ESN" width="90"><h:outputText value="#{chip.esn}" /></p:column>
+					    <p:column headerText="DisplayID" width="90"><h:outputText value="#{chip.displayID}" /></p:column>
+					    <p:column headerText="Estado" width="50"><h:outputText value="#{chip.statusName}" /></p:column>
+					    <p:column headerText="Recepción" width="100"><h:outputText value="#{chip.deliveryDateTxt}" /></p:column>
+					    <p:column headerText="Creación" width="120"><h:outputText value="#{chip.creationTimeTxt}" /></p:column>
+					    <p:column headerText="Actualizado" width="120"><h:outputText value="#{chip.lastUpdateTimeTxt}" /></p:column>
+						<p:column
+							headerText="Accciones"
+							style="width:80px;"
+							exportable="false">
+							<h:panelGrid
+								columns="3"
+								styleClass="bordernone">
+								<p:commandLink
+									update=":frmViewChip:oppViewChip :frmMessages:messages"
+									actionListener="#{chipController.selectChipID(chip.chipID)}"
+									oncomplete="PF('wgvViewChip').show();"
+									title="Mostrar">
+									<i class="pi pi-search"></i>
+								</p:commandLink>
+								<p:commandLink
+									update=":frmEditChip:oppEditChip :frmMessages:messages"
+									actionListener="#{chipController.voidEditChip(chip.chipID)}"
+									oncomplete="PF('wgvEditChip').show();"
+									title="Editar CHIP">
+									<i class="pi pi-pencil"></i>
+								</p:commandLink>
+							</h:panelGrid>
+						</p:column>
+					</p:dataTable>
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<h:form id="frmNewChip">
+			<p:dialog header="Nueva Tarjeta CHIP"
+				widgetVar="wgvNewChip" resizable="false"
+				id="dlgNewChip" showEffect="fade" hideEffect="clip" modal="true">
+				<p:outputPanel id="oppNewChip">
+					<h:panelGrid columns="3" cellpadding="5">
+						<p:outputLabel for="txtsim" style="font-weight: bold;" value="Nº SIM:"/>
+						<p:inputText id="txtsim" value="#{chipController.selectChip.sim}" required="true" size="22" />
+						<p:message for="txtsim" display="icon" />
+						
+						<p:outputLabel for="txticcid" style="font-weight: bold;" value="Nº iccid:"/>
+						<p:inputText id="txticcid" value="#{chipController.selectChip.iccid}" required="true" size="22" />
+						<p:message for="txticcid" display="icon" />
+						
+						<p:outputLabel for="txtchipSupplierID" style="font-weight: bold;" value="Tipo de CHIP:"/>
+						<p:selectOneMenu id="txtchipSupplierID" value="#{chipController.selectChip.chipSupplierID}" effect="fade" required="true" style="width: 200px;">
+							<f:selectItems value="#{chipController.listChipSupplier}" 
+											var="chipSupplier" itemLabel="#{chipSupplier.name}" itemValue="#{chipSupplier.chipSupplierID}" />
+						</p:selectOneMenu>
+						<p:message for="txtchipSupplierID" display="icon" />
+						
+						<p:outputLabel for="txtdescription" style="font-weight: bold;" value="Referencia:"/>
+						<p:inputText id="txtdescription" value="#{chipController.selectChip.description}" size="52"  />
+						<p:spacer />
+						
+						<p:outputLabel for="txtdeliveryDate" style="font-weight: bold;" value="Recepcionado el:"/>
+						<p:calendar id="txtdeliveryDate" value="#{chipController.selectChip.deliveryDateChange}" showOn="button" pattern="dd-MM-yyyy" />
+						<p:spacer />
+						
+					</h:panelGrid>
+					<p:separator></p:separator>
+					<h:panelGrid
+						columns="2"
+						style="  float:right;">
+						<p:commandButton
+							value="Grabar"
+							actionListener="#{chipController.voidSaveNewChip}"
+							update=":frmChip:dtbChip :frmMessages:messages"
+							oncomplete="PF('wgvListchip').filter()">
+						</p:commandButton>
+						<p:commandButton
+							value="Cancelar"
+							onclick="PF('wgvNewChip').hide();" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+		<h:form id="frmEditChip">
+			<p:dialog header="Editar Dispositivo CHIP"
+				widgetVar="wgvEditChip" resizable="false"
+				id="dlgEditChip" showEffect="fade" hideEffect="clip" modal="true">
+				<p:outputPanel id="oppEditChip">
+					<h:panelGrid columns="3" cellpadding="5">
+						<p:outputLabel style="font-weight: bold;" value="Nº SIM:"/>
+						<p:outputLabel value="#{chipController.selectChip.sim}"/>
+						<p:spacer />
+						
+						<p:outputLabel for="txticcid" style="font-weight: bold;" value="Nº iccid:"/>
+						<p:inputText id="txticcid" value="#{chipController.selectChip.iccid}" required="true" size="22" />
+						<p:message for="txticcid" display="icon" />
+						
+						<p:outputLabel for="txtchipSupplierID" style="font-weight: bold;" value="Tipo de CHIP:"/>
+						<p:selectOneMenu id="txtchipSupplierID" value="#{chipController.selectChip.chipSupplierID}" effect="fade" required="true" style="width: 200px;">
+							<f:selectItems value="#{chipController.listChipSupplier}" 
+											var="chipSupplier" itemLabel="#{chipSupplier.name}" itemValue="#{chipSupplier.chipSupplierID}" />
+						</p:selectOneMenu>
+						<p:message for="txtchipSupplierID" display="icon" />
+						
+						<p:outputLabel for="txtdescription" style="font-weight: bold;" value="Referencia:"/>
+						<p:inputText id="txtdescription" value="#{chipController.selectChip.description}" size="52" />
+						<p:spacer />
+						
+						<p:outputLabel for="txtdeliveryDate" style="font-weight: bold;" value="Recepcionado el:"/>
+						<p:calendar id="txtdeliveryDate" value="#{chipController.selectChip.deliveryDateChange}" showOn="button" pattern="dd-MM-yyyy" />
+						<p:spacer />
+						
+						<p:outputLabel for="txtchipStatusID" style="font-weight: bold;" value="Estado de CHIP:"/>
+						<p:selectOneMenu id="txtchipStatusID" value="#{chipController.selectChip.chipStatusID}" effect="fade" required="true" style="width: 200px;">
+							<f:selectItems value="#{chipController.listChipStatus}" 
+											var="chipStatus" itemLabel="#{chipStatus.name}" itemValue="#{chipStatus.chipStatusID}" />
+						</p:selectOneMenu>
+						<p:message for="txtchipStatusID" display="icon" />
+
+					</h:panelGrid>
+					<p:separator></p:separator>
+					<h:panelGrid
+						columns="2"
+						style="  float:right;">
+						<p:commandButton
+							value="Grabar"
+							actionListener="#{chipController.voidSaveEditChip}"
+							update=":frmChip:dtbChip :frmMessages:messages"
+							oncomplete="PF('wgvListchip').filter()">
+						</p:commandButton>
+						<p:commandButton
+							value="Cancelar"
+							onclick="PF('wgvEditChip').hide();" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+		<h:form id="frmViewChip">
+			<p:dialog header="Ver Historial de Tarjeta CHIP"
+				widgetVar="wgvViewChip" resizable="false" width="1000"
+				id="dlgViewChip" showEffect="fade" hideEffect="clip" modal="true">
+				<p:outputPanel id="oppViewChip">
+					<div class="ui-g">
+						<div class="ui-g-6">
+							<h:panelGrid columns="2" cellpadding="5">
+								<p:outputLabel style="font-weight: bold;" value="Nº SIM:"/>
+								<p:outputLabel value="#{chipController.selectChip.sim}"/>
+								<p:outputLabel style="font-weight: bold;" value="Proveedor:"/>
+								<p:outputLabel value="#{chipController.selectChip.supplierName}"/>
+								<p:outputLabel style="font-weight: bold;" value="ESN ASIGNADO:"/>
+								<p:outputLabel value="#{chipController.selectChip.esn}"/>
+							</h:panelGrid>
+						</div>
+						<div class="ui-g-6">
+							<h:panelGrid columns="2" cellpadding="5">
+								<p:outputLabel style="font-weight: bold;" value="Nº de iccid:"/>
+								<p:outputLabel value="#{chipController.selectChip.iccid}"/>
+								<p:outputLabel style="font-weight: bold;" value="Recepcionado el:"/>
+								<p:outputLabel value="#{chipController.selectChip.deliveryDateTxt}"/>
+								<p:outputLabel style="font-weight: bold;" value="Estado:"/>
+								<p:outputLabel value="#{chipController.selectChip.statusName}"/>
+							</h:panelGrid>
+						</div>
+					</div>
+					<div class="ui-g">
+					<div class="ui-g-12">
+					<h:panelGrid columns="2" cellpadding="5">
+						<p:outputLabel style="font-weight: bold;" value="Referencia:"/>
+						<p:outputLabel value="#{chipController.selectChip.description}"/>
+					</h:panelGrid>
+					</div>
+					</div>
+					<p:dataTable
+						id="dtbViewChip" 
+						var="chip" 
+						value="#{chipController.listHistoryChip}"
+						style="text-align: center;"
+						rowIndexVar="index"
+						scrollable="true" scrollHeight="200"
+						emptyMessage="0 registros...!!!">
+						<p:column headerText="ICCID Anterior" width="160" style="white-space:nowrap; text-align:left;"><h:outputText value="#{chip.iccidOld}" /></p:column>
+						<p:column headerText="ICCID Actual" width="160" style="white-space:nowrap; text-align:left;"><h:outputText value="#{chip.iccid}" /></p:column>
+					    <p:column headerText="Proveedor Anterior" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{chip.supplierNameOld}" /></p:column>
+					    <p:column headerText="Proveedor Actual" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{chip.supplierName}" /></p:column>
+					    <p:column headerText="Estado Anterior" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{chip.statusNameOld}" /></p:column>
+					    <p:column headerText="Estado Actual" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{chip.statusName}" /></p:column>
+					    <p:column headerText="Realizado el" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{chip.creationTimeTxt}" /></p:column>
+					    <p:column headerText="Usuario" width="120" style="white-space:nowrap; text-align:center;"><h:outputText value="#{chip.userName}" /></p:column>
+					</p:dataTable>
+					<p:separator></p:separator>
+					<h:panelGrid
+						columns="2"
+						style="float:right;">
+						<p:spacer />
+						<p:commandButton
+							value="Cerrar"
+							onclick="PF('wgvViewChip').hide();" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+
+</h:body>
+</f:view>
+</html>

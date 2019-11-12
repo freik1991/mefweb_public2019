@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es" >
+
+    <h:head>
+        <title>MATRIX OPERACIONES - HACOM.S.A.C.</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+		<style type="text/css">
+		.centrar {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 330px;
+			margin-left: -165px;
+			height: 260px;
+			margin-top: -130px;
+			background-color: aqua;
+		}
+		.card {
+			  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+			  -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+			  -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+			  -moz-border-radius: 2px;
+			  -webkit-border-radius: 2px;
+			  border-radius: 2px;
+			  background: #ffffff;
+			  padding: 16px;
+			  margin-bottom: 16px;
+			  box-sizing: border-box; }
+			  
+	    #logomapa {
+	width: 120px;
+	height: 50px;
+	margin-left: 10px;
+	margin-top: 5px;
+	position: absolute;
+	border-radius: 6px;
+}
+
+#tituloMsj {
+	color: white;
+/* 	margin-top: 28px; */
+/* 	margin-left: 280px; */
+	font: normal 24px/1 Arial, Helvetica, sans-serif;
+	/* 	text-shadow: 0 0 9px rgba(0, 0, 0, 1); */
+/* 	position: absolute; */
+/* 	top: -2px; */
+margin-top: 10px;
+    margin-bottom: 10px;
+        text-align: center;
+}
+
+#imgLogin {
+
+    height: 50px;
+    width: 50px;
+	
+/* 	margin-right: 40px; */
+/* 	margin-left: 150px; */
+	    vertical-align: middle;
+	background-color: white;
+	margin: 5px auto;
+	text-align: center;
+	
+}
+
+#contMensaje {
+
+position: absolute;
+top: 50%;
+left: 50%;
+width: 330px;
+margin-left: -165px;
+height: 260px;
+margin-top: -130px;
+		
+	border-radius: 4px;
+	box-sizing: border-box;
+	padding: 0px;
+	-webkit-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
+	box-sizing: border-box;
+	color: #f39702;
+	padding: 16px;			 
+	background : #839192;
+
+}
+		</style>
+    </h:head>
+
+    <h:body styleClass="login-body" style="background-color:white; ">
+        <h:form>
+        <p:growl id="growl" showDetail="true" sticky="true" />
+       <div class="container"  style="background-color: #000D53; height:66px;width:100%;text-align: center" >
+       <div class="row">
+   
+       <div class="col-md-offset-2"></div>
+       <div class="col-md-2" style=" height: 60px; background-color: #000D53; color: white;">
+       <img id="imgLogin" src="images/logomeft.png" />
+       </div>
+       				
+       	        <div class="col-md-8">
+ 				<h3 id="tituloMsj" style="">Sistema de Registro de Asistencias Técnicas y Capacitación - IMPLANTACIÓN OGTI</h3> 
+</div>
+
+			
+			
+			</div>
+			<div  class="container-fluid" >
+			<div class="row">
+			<div class="col-md-12">
+			 <p class="message" style="color: black; text-align: center;position: absolute;margin-top:20px;">
+                       <marquee>Bienvenidos al Sistema de Registro de Asistencia Técnica y Capacitación - IMPLANTACIÓN OGTI. Para acceder al Sistema Ud. deberá ingresar su código de usuario y clave de acceso, luego presionar el botón de ingresar.”
+                   </marquee>
+                   </p>
+             </div> 
+             </div>   
+               </div>                 
+        <div id="contMensaje" >
+            <div class="ui-g" >
+           
+            	<div style="text-align: center; margin-left: auto; margin-right: auto; color: #333;">
+	                 <h2 style="margin-top: 0; margin-bottom: 0; text-align: center;">ACCESO Al Sistema</h2>
+                 </div>
+                <div style="margin:25px auto 18px auto;">
+				        <div class="ui-inputgroup">
+				            <span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
+				            <p:inputText value="#{loginController.varUsuario}" placeholder="Usuario" />      
+				        </div>
+                </div>
+                
+                <div style="margin:0 auto 18px auto;">
+				        <div class="ui-inputgroup">
+				            <span class="ui-inputgroup-addon"><i class="pi pi-key"></i></span>
+				            <p:password  value="#{loginController.varClave}" feedback="false" placeholder="Clave"/>
+				        </div>
+                 </div>
+                <div style="margin:5px auto 18px auto;">
+                    <p:commandButton value="Ingresar" icon="pi pi-sign-in" iconPos="right" 
+                     action="#{loginController.validar}"   update="@form"/>
+                </div>
+                </div>
+            </div>
+            
+        
+        
+      
+
+        </div>
+        
+        
+       
+         </h:form>
+    </h:body>
+
+</html>

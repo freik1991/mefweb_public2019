@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmInc">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<!-- 					<p:outputLabel  styleClass="card-title" value="BIENVENIDO: #{loginController.nombre}"/> -->
+						<h1 style="font-size: 36px;">Consulta y Edición de Usuarios</h1>
+						<!-- 					<h:panelGrid columns="4" cellpadding="5"> -->
+						<!-- 						<p:outputLabel value="Campos:" ></p:outputLabel> -->
+						<!-- 						<p:selectOneMenu style="width:300px"> -->
+						<!-- 							<f:selectItem itemLabel="[Seleccione]" itemValue="" /> -->
+						<!-- 							<f:selectItem itemLabel="Xbox One" itemValue="Xbox One" /> -->
+						<!-- 							<f:selectItem itemLabel="PS4" itemValue="PS4" /> -->
+						<!-- 							<f:selectItem itemLabel="Wii U" itemValue="Wii U" /> -->
+						<!-- 						</p:selectOneMenu> -->
+						<!-- 						<p:inputText value="valor" styleClass="ui-label-text"></p:inputText> -->
+						<!-- 						<p:commandButton value="Agregar"></p:commandButton> -->
+
+						<!-- 					</h:panelGrid> -->
+						<p:commandButton value="Buscar" icon="pi pi-search"
+							
+							onclick="PF('WGBuscarUsu').show();"
+							update="frmBuscarUsu,tblUsuario"></p:commandButton>
+						<br /> <br />
+						<p:dataTable id="tblUsuario" var="asist"
+							value="#{usuarioController.lstAsis}"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="true" rows="10"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							currentPageReportTemplate="Página {currentPage} de {totalPages} | Mostrando Registros del {startRecord} al {endRecord} de un Total de {totalRecords}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15"
+							emptyMessage="Ningun Registro encontrado.">
+		
+							<p:column headerText="RUC" style="width: 175px">
+								<h:outputText value="#{asist.username}" />
+							</p:column>
+
+							<p:column headerText="Nombres" style="width: 175px">
+								<h:outputText value="#{asist.first_name}" style="width: 75px" />
+							</p:column>
+
+							<p:column headerText="Apellidos" style="width: 175px">
+								<h:outputText value="#{asist.last_name}" />
+							</p:column>
+
+							<p:column headerText="Cargo" style="width: 175px">
+								<h:outputText
+									value="#{asist.userType}" />
+							</p:column>
+							<p:column headerText="Sectorista" style="width: 175px">
+								<h:outputText value="#{asist.sectorist_cumpl}" />
+							</p:column>
+							<p:column headerText="Dispositivo" style="width: 175px">
+								<h:outputText value="#{asist.device_id}" />
+							</p:column>
+							
+						
+						</p:dataTable>
+
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarUsuario" header="Buscar Usuario"
+				widgetVar="WGBuscarUsu" appendTo="@(body)" modal="true"
+				width="800" height="563" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarUsu">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					
+						<h:panelGrid columns="2" cellpadding="2">
+						<p:selectBooleanCheckbox value="#{usuarioController.usuarioBean.checkRuc}" itemLabel="Ruc" styleClass="ui-label-text2"/>
+							<p:inputText
+								value="#{usuarioController.usuarioBean.username}"></p:inputText>
+								
+							<p:selectBooleanCheckbox value="#{usuarioController.usuarioBean.checkUsu}" itemLabel="Nombre y/o Apellidos" styleClass="ui-label-text2"/>
+							<p:inputText
+								value="#{usuarioController.usuarioBean.name_usu}"
+								style="width:460px;"></p:inputText>
+								<p:selectBooleanCheckbox value="#{usuarioController.usuarioBean.checkDisp}" itemLabel="Dispositivo" styleClass="ui-label-text2"/>
+							<p:inputText
+								value="#{usuarioController.usuarioBean.device_id}"></p:inputText>
+							<p:selectBooleanCheckbox value="#{usuarioController.usuarioBean.checkTipo}" itemLabel="Tipo" styleClass="ui-label-text2"/>
+							<p:selectOneMenu
+								value="#{usuarioController.usuarioBean.userType}"
+								style="width:200px">
+								<f:selectItem itemLabel="Seleccione" itemValue="0" />
+								<f:selectItem itemLabel="Sectorista" itemValue="Sectorista" />
+								<f:selectItem itemLabel="Implantador" itemValue="Implantador" />
+							</p:selectOneMenu>	
+
+							<p:selectBooleanCheckbox value="#{usuarioController.usuarioBean.checkSecNam}" itemLabel="Sectorista Ruc" styleClass="ui-label-text2"/>
+							<p:inputText
+								value="#{usuarioController.usuarioBean.sectorist}"></p:inputText>
+							
+							<p:commandButton value="Ejecutar Filtro" 
+								actionListener="#{usuarioController.filtroUsuario}"  update=":frmInc:tblUsuario" process="frmBuscarUsu" global="false" onclick="PF('WGBuscarUsu').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>

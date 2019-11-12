@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmInc">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<!-- 					<p:outputLabel  styleClass="card-title" value="BIENVENIDO: #{loginController.nombre}"/> -->
+						<h1 style="font-size: 36px;">Resumen General de Asistencias Técnicas</h1>
+						<!-- 					<h:panelGrid columns="4" cellpadding="5"> -->
+						<!-- 						<p:outputLabel value="Campos:" ></p:outputLabel> -->
+						<!-- 						<p:selectOneMenu style="width:300px"> -->
+						<!-- 							<f:selectItem itemLabel="[Seleccione]" itemValue="" /> -->
+						<!-- 							<f:selectItem itemLabel="Xbox One" itemValue="Xbox One" /> -->
+						<!-- 							<f:selectItem itemLabel="PS4" itemValue="PS4" /> -->
+						<!-- 							<f:selectItem itemLabel="Wii U" itemValue="Wii U" /> -->
+						<!-- 						</p:selectOneMenu> -->
+						<!-- 						<p:inputText value="valor" styleClass="ui-label-text"></p:inputText> -->
+						<!-- 						<p:commandButton value="Agregar"></p:commandButton> -->
+
+						<!-- 					</h:panelGrid> -->
+						<h:panelGrid columns="4" cellpadding="4">
+							<p:outputLabel value="Fecha:"
+								style="margin-left:6px;margin-right:6px;"
+								styleClass="ui-label-text2"></p:outputLabel>
+							<p:calendar
+								value="#{resumenController.resumenBean.fechaResCalI}"
+								showOn="button" pattern="dd/MM/yyyy"></p:calendar>
+							<p:calendar
+								value="#{resumenController.resumenBean.fechaResCalF}"
+								showOn="button" pattern="dd/MM/yyyy"></p:calendar>
+								<p:commandButton value="Buscar" icon="pi pi-search" actionListener="#{resumenController.filtroResumen}"
+							update="tblResumen"></p:commandButton>
+						</h:panelGrid>
+						
+						<br /> <br />
+						<p:dataTable id="tblResumen" var="asist"
+							value="#{resumenController.lstAsis}"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="true" rows="10"
+							style="font-size: 12px;text-align:center;padding :5px,width:3500px;"
+							currentPageReportTemplate="Página {currentPage} de {totalPages} | Mostrando Registros del {startRecord} al {endRecord} de un Total de {totalRecords}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15"
+							emptyMessage="Ningun Registro encontrado.">
+		
+							<p:column headerText="Departamento" style="width: 175px;">
+								<h:outputText value="#{asist.name}" />
+							</p:column>
+
+							<p:column headerText="Asistencias Presenciales" style="width: 475px;">
+								<h:outputText value="#{asist.assitance}" />
+							</p:column>
+
+							<p:column headerText="Asistencias Remotas" style="width: 475px;">
+								<h:outputText value="#{asist.totalRemote}" />
+							</p:column>
+
+							<p:column headerText="Total de Asistencias" style="width: 475px;">
+								<h:outputText
+									value="#{asist.total}" />
+							</p:column>
+						
+						</p:dataTable>
+
+
+
+					</div>
+				</div>
+
+			</h:form>
+			
+		</div>
+	</h:body>
+</f:view>
+</html>

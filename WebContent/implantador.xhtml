@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ui-paginator a {
+	margin-right: 5px;
+}
+
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+			<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmImpl">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Implantador</h1>
+						<p:growl id="msgs" showDetail="true" />
+
+						<p:dataTable id="tblTipoue" var="asist"
+							value="#{implantadorController.lstAdm}" widgetVar="wgImplantador"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="true" rows="10" rowKey="#{asist.idImpl}"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							selectionMode="single"
+							selection="#{implantadorController.selectItemsAdm}"
+							emptyMessage="Ningun Registro encontrado.">
+							<f:facet name="header">
+								<div class="ui-g">
+									<div class="ui-g-6">
+										<p:outputPanel
+											style="margin-left:0px !important; text-align:left;">
+											<p:commandButton icon="fa fa-refresh"
+												value="Actualizar Lista" style="width: 200px;"
+												oncomplete="PF('wgImplantador').filter()" />
+											<p:spacer width="30" />
+											<h:outputText value="Buscar (*): " />
+											<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px" />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+												value="Buscar por descripción" />
+											<p:commandButton onclick="PF('wgImplantador').filter()"
+												icon="pi pi-search" />
+											<p:spacer width="5" />
+											<p:commandButton onclick="PF('wgImplantador').clearFilters()"
+												icon="pi pi-ban" />
+										</p:outputPanel>
+									</div>
+									<div class="ui-g-6">
+										<p:outputPanel 
+											style="margin-rigth:0px !important;text-align:right;display:#{implantadorController.displayButton}">
+											<p:commandButton value="Añadir Implantador"
+												actionListener="#{implantadorController.resetearUser}"
+												update="frmBuscarImp" onclick="PF('WGBuscarImp').show();"
+												icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Asignar Entidad"
+												actionListener="#{implantadorController.resetearlistaEntidad}"
+												update="frmBuscarEntidad" onclick="PF('WGBuscarEntidades').show();"
+												icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{implantadorController.habilitarUser}"
+												onclick="PF('WGBuscarImp').show();" update="frmBuscarImp"
+												process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{implantadorController.deleteAdmin}"
+												update="tblTipoue" oncomplete="PF('wgImplantador').filter()"/>
+											<span class="ui-icon pi pi-ellipsis-v" />
+<!-- 											<p:commandButton value="Exportar" -->
+<!-- 												onclick="PF('WGBuscarImp').show();" icon="pi pi-file"></p:commandButton> -->
+<!-- 											<p:commandButton value="Imprimir" title="Print" -->
+<!-- 												icon="pi pi-print" /> -->
+<!-- 											<p:spacer width="20" /> -->
+
+										</p:outputPanel>
+									</div>
+								</div>
+							</f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{implantadorController.selectedAdm}"
+								update=":frmImpl:msgs,frmBuscarImp" />
+							<p:column headerText="Dni" filterBy="#{asist.dni}"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.dni}" />
+							</p:column>
+
+							<p:column headerText="IMEI" style="width: 75px"
+								filterBy="#{asist.dni}" filterMatchMode="contains"
+								filterStyle="display:none;">
+								<h:outputText value="#{asist.imei}" style="width: 75px" />
+							</p:column>
+
+							<p:column headerText="Nombre" filterBy="#{asist.nombreImpl}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width : 200px;">
+								<h:outputText value="#{asist.nombreImpl}" />
+							</p:column>
+
+							<p:column headerText="Apellido" filterBy="#{asist.apellidoImpl}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width : 200px;">
+								<h:outputText value="#{asist.apellidoImpl}" />
+							</p:column>
+							<p:column headerText="Celular" filterBy="#{asist.celular}"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.celular}" />
+							</p:column>
+							<p:column headerText="Ruc" filterBy="#{asist.ruc}"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.ruc}" />
+							</p:column>
+							<p:column headerText="CAS" filterBy="#{asist.cas}"
+								filterMatchMode="contains" filterStyle="display:none;"
+								style="width : 150px;">
+								<h:outputText value="#{asist.cas}" />
+							</p:column>
+							<p:column headerText="Foto" >
+								<h:graphicImage style="width:50px;height:50px;" value="#{implantadorController.getFileArchivo(asist.fotoAdjunto)}" />
+<!-- 								       <img  src="C:/francisco/excel.png" /> -->
+								
+							</p:column>
+							<p:column headerText="Usuario" filterBy="#{asist.usuaImpl}"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.usuaImpl}" />
+							</p:column>
+							<!-- 							<p:column headerText="Contraseña"> -->
+							<!-- 								<h:outputText value="#{asist.contImpl}" /> -->
+							<!-- 							</p:column> -->
+							<p:column headerText="Correo" filterBy="#{asist.correo}"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.correo}" />
+							</p:column>
+							<p:column headerText="Sectorista" style="width : 300px;"
+								filterBy="#{asist.nombreSec} #{asist.apellidoSec}"
+								filterMatchMode="contains" filterStyle="display:none;">
+								<h:outputText value="#{asist.nombreSec} #{asist.apellidoSec}" />
+							</p:column>
+							<p:column headerText="Acciones">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarImp').show()" icon="pi pi-eye"
+									update=":frmImpl:tblTipoue,frmBuscarImp">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{implantadorController.selectItemsAdm}" />
+
+								</p:commandButton>
+								
+							</p:column>
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarImp" header="Implantador"
+				widgetVar="WGBuscarImp" appendTo="@(body)" modal="true" width="800"
+				height="430" showEffect="face" hideEffect="clip" resizable="false"
+				maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarImp">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+
+						<h:panelGrid columns="4" cellpadding="4">
+							<p:outputLabel value="Nombre:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.nombreImpl}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Apellidos:" styleClass="ui-label-text2"></p:outputLabel>
+
+							<p:inputText
+								value="#{implantadorController.userBean.apellidoImpl}"
+								readonly="#{implantadorController.disabledUser}"
+								style="width:250px;"></p:inputText>
+							<p:outputLabel value="Usuario:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.usuaImpl}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Contraseña:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.contImpl}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Dni:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.dni}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Correo:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.correo}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+							
+							<p:outputLabel value="IMEI:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.imei}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Celular:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.celular}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+							<p:outputLabel value="Ruc:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.ruc}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+							<p:outputLabel value="CAS:" styleClass="ui-label-text2"></p:outputLabel>
+							<p:inputText value="#{implantadorController.userBean.cas}"
+								readonly="#{implantadorController.disabledUser}"></p:inputText>
+						<h:graphicImage id="gFoto" style="width:50px;height:50px;"
+									value="#{implantadorController.userBean.fotografiaEncoder}" />
+							<p:commandButton value="Subir Archivo" style="margin-top:3px;" onclick="PF('WGCargarFotografiaAl').show();"></p:commandButton>
+							<p:outputLabel></p:outputLabel>
+														<p:outputLabel></p:outputLabel>
+							
+							<p:outputLabel value="Sectorista:" styleClass="ui-label-text2"></p:outputLabel>
+							
+							<p:selectOneMenu style="width:200px" panelStyle="width : 200px;" 
+								value="#{implantadorController.userBean.sectoristaId}" disabled="#{implantadorController.disabledUser}"  >
+								<f:selectItem itemLabel="[Seleccione]" itemValue="0" />
+								<f:selectItems var="sec" value="#{implantadorController.lstSectorista}"
+									itemLabel="#{sec.nombreSec}" itemValue="#{sec.idSec}" />
+							</p:selectOneMenu>
+														<p:outputLabel></p:outputLabel>
+														<p:outputLabel></p:outputLabel>
+							
+							<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{implantadorController.evaluarMetodo}"
+								oncomplete="PF('wgImplantador').filter()" process="frmBuscarImp" global="false"
+								update=":frmImpl:tblTipoue" onclick="PF('WGBuscarImp').hide();"></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;" onclick="PF('WGBuscarImp').hide();"></p:commandButton>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+			<p:dialog id="dlgBuscarEntidades"
+				header=".:[Ventana - Buscar Entidades]:."
+				widgetVar="WGBuscarEntidades"  modal="true"
+				width="1200" height="350" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarEntidad">
+					<p:panel header="Buscar Entidad" style="font-size: 10px;">
+
+						<p:pickList id="PojoPickList" value="#{implantadorController.lstEntidadSel}"
+							var="ent" itemLabel="#{ent.unitName}" itemValue="#{ent}" effect="bounce"  converter="themeConverter"
+							showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true" 
+							 >
+						</p:pickList>
+						
+					</p:panel><br/>
+					<p:commandButton id="btnAceptar" value="Aceptar"
+							title="Aceptar" icon="ui-icon-close"
+							action="#{implantadorController.asignarEntidad()}"
+							onclick="PF('WGBuscarEntidades').hide();"
+							style="float:left; font-size:95%" />
+					<p:commandButton id="btnCancelar" value="Cancelar"
+							title="Cancelar" icon="ui-icon-close"
+							action="#{cGenerico.cancelarBusquedaSocio}"
+							oncomplete="WGBuscarSocio.hide()"
+							style="float:left; font-size:95%" />
+					
+					
+				</h:form>
+			</p:dialog>
+			
+	
+<p:dialog id="dlgCargarFotografiaAl" 
+				  header="Cargar Fotografia de Articulo"
+				  widgetVar="WGCargarFotografiaAl" 
+				  resizable="false" 
+				  showEffect="fade"
+				  hideEffect="clip" 
+				  modal="true" 
+				  appendTo="@(body)" 
+				  width="50%"
+				  closeOnEscape="true"
+				  dynamic="true">
+				  <h:form id="frmCargarArticuloAlFoto" > 
+<p:growl id="messages" showDetail="true" /> 				  
+								<p:fileUpload id="fuCargarFotografia"  
+								process="@this"
+								 fileUploadListener="#{implantadorController.handleFileUpload}"
+								 mode="advanced"
+								 update=":frmCargarArticuloAlFoto:messages,:frmBuscarImp:gFoto"
+								label="Seleccionar Archivo"  
+								cancelLabel="Cancelar"
+								uploadLabel="Enviar Archivo"
+								oncomplete="PF('WGCargarFotografiaAl').hide();"/>
+				 
+				<p:separator/>
+				
+		</h:form>
+				
+</p:dialog>
+			
+		</div>
+	</h:body>
+</f:view>
+</html>

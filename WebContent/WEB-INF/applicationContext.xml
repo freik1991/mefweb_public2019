@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+			       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties">
+			<value>
+				<!-- Customize these basic placeholders. -->
+<!-- 								SBI_DDBB_IP = 192.168.1.101 -->
+				
+				SBI_DDBB_IP = 192.168.5.60
+				SBI_DDBB_USER = sa
+				SBI_DDBB_PASS = 3X3tn$$$w
+<!-- 					SBI_DDBB_USER = gts2 -->
+<!-- 				SBI_DDBB_PASS = Opengts_2 -->
+				
+				
+				<!-- Environment variable overrides (only if present). No need to customize these. -->
+				ddbb_ip = #{systemEnvironment['SBI_DDBB_IP'] ?: '${SBI_DDBB_IP}'}
+				ddbb_user = #{systemEnvironment['SBI_DDBB_USER'] ?: '${SBI_DDBB_USER}'}
+				ddbb_pass = #{systemEnvironment['SBI_DDBB_PASS'] ?: '${SBI_DDBB_PASS}'}
+				
+				<!-- Derived placeholders. -->
+				jdbc.ip = ${ddbb_ip}
+				jdbc.user = ${ddbb_user}
+				jdbc.pass = ${ddbb_pass}
+			</value>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://${jdbc.ip}:1433;databaseName=GTS2_20180722" />
+<!--  		<property name="url" value="jdbc:sqlserver://${jdbc.ip}:1433;databaseName=gts2" />  -->
+
+		<property name="username" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.pass}" />
+	</bean>	
+	
+	 <bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean> 
+
+    <!-- Use annotation for configuration-->
+    <context:annotation-config/>
+    <context:spring-configured/>
+
+	<!-- enable component scanning (beware that this does not enable mapper scanning!) -->
+	<context:component-scan base-package="hacom.pe" />
+
+	<!-- enable transaction demarcation with annotations -->
+	<tx:annotation-driven />
+
+	<bean id="viewResolver"
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".xhtml" />
+    </bean>
+ 
+	<!-- define the SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="hacom.pe.datos.entidades" />
+	</bean>
+
+	<!-- scan for mappers and let them be autowired -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="basePackage" value="hacom.pe.datos" />
+	</bean>
+
+</beans>

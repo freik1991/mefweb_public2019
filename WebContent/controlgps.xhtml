@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es" >
+	<h:head>
+	<style type="text/css">
+		.styleColumn {
+			text-align: center;
+		}
+		
+		.styleFontTotales {
+			font-weight: bold;
+		}
+		
+		
+		.styleFontSize {
+			font-size: 8px;
+		}
+		
+	</style>
+	
+	</h:head>
+<f:view >
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px; ">
+			<ui:include src="WEB-INF/topbar.xhtml"/>
+			<div class="ui-g-12">
+		
+		<h:form id="fmrUpdate">
+			<p:dataTable
+				id="dtpGps"
+				widgetVar="wgvGps"
+				var="event"
+				style="text-align: center;"
+				value="#{gpsControlController.listGps}"
+				rowIndexVar="index"
+				emptyMessage="0 registros...!!!"
+				rowStyleClass="#{event.apagado?'colorORANGE':(event.problema?'colorRED':null)}">
+				<f:facet name="header">
+					<div class="ui-g">
+						<div class="ui-g-6">
+							<p:outputPanel style="text-align:left;">
+								<p:selectOneMenu 
+									value="#{gpsControlController.accountID}"
+									label="Cuenta"
+									panelStyle="width:170px"
+									scrollHeight="150" >
+									<f:selectItem itemLabel="Todas las cuentas" itemValue="-1" />
+									<f:selectItems
+										value="#{gpsControlController.listAccount}"
+										var="account"
+										itemValue="#{account.accountID}"
+										itemLabel="#{account.uniqueID} - #{account.bussinessName}" />
+								</p:selectOneMenu>
+								
+							</p:outputPanel>
+						</div>
+						<div class="ui-g-6" style="">
+							<p:outputPanel style="text-align:right;">
+								<p:commandButton
+									id="btnRefreshDispatch"
+									widgetVar="wdgRefreshDispatch"
+									value="Actualizar"
+									actionListener="#{gpsControlController.selectAccount}"
+									update="dtpGps :frmMessages:messages"
+									icon="fa fa-refresh"
+									style="width:130px;" />
+									<p:spacer width="15" height="5"></p:spacer>
+								<h:commandLink>
+					                <p:graphicImage url="/images/excel.png" width="24" style="margin-bottom: -5px"/>
+					                <p:dataExporter type="xls" target="dtpGps" fileName="lista" />
+					            </h:commandLink>
+								<p:poll id="updatePoll"
+									interval="15"
+									listener="#{gpsControlController.selectAccount}"
+									update="dtpGps :frmMessages:messages" />
+							</p:outputPanel>
+						</div>
+					</div>
+				</f:facet>
+				<p:column
+					headerText="Nº"
+					style="width:20px;text-align:center;">
+					<p:outputLabel value="#{index + 1}" />
+				</p:column>
+				<p:column
+					headerText="Cuenta"
+					width="200" 
+						style="white-space: nowrap;" >
+
+					<h:outputText value="#{event.bussinessName}" />
+				</p:column>
+				<p:column
+					headerText="Ruta" width="100" 
+					style="text-align: left;">
+					<h:outputText
+						value="#{event.rutaName}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="Padron" width="50">
+					<h:outputText
+						value="#{event.padron}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="Placa" width="50" >
+					<h:outputText
+						value="#{event.placa}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="esn" width="100">
+					<h:outputText
+						value="#{event.esn}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="gpsType" width="100"
+					style="text-align: left;">
+					<h:outputText
+						value="#{event.gpsType}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="Estado Motor" width="200"
+					style="text-align: left;">
+					<h:outputText
+						value="#{event.statusName}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="checkPointID" width="50">
+					<h:outputText
+						value="#{event.checkPointID}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="Dirección"
+					style="text-align: left;">
+					<h:outputText
+						value="#{event.address}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="Hora de GPS" width="150"
+					style="text-align: left;">
+					<h:outputText
+						value="#{event.timeIngresoText}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="Hora de Registro" width="150"
+					style="text-align: left;">
+					<h:outputText
+						value="#{event.creationTimeText}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column
+					headerText="Diferencia" width="100"
+					style="text-align: left;">
+					<h:outputText
+						value="#{event.agoShort}"
+						style="white-space: nowrap;" />
+				</p:column>
+				<p:column style="width:32px;text-align: center">
+		             <p:commandButton update=":frmViewEvent:optViewEvent :frmMessages:messages" oncomplete="PF('wgvViewEvent').show()" icon="pi pi-search" title="Visualización de Eventos (Desfaces y Saltos)">
+		                <f:setPropertyActionListener value="#{event}" target="#{gpsControlController.selectEvent}" />
+		            </p:commandButton>
+		        </p:column>
+			</p:dataTable>
+		</h:form>
+		<h:form id="frmViewEvent">
+			<p:dialog header="Visualización de Eventos (Desfaces y Saltos)" widgetVar="wgvViewEvent" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+				<p:outputPanel id="optViewEvent">
+		            <h:panelGrid columns="4">
+		            	<p:outputLabel value="CUENTA:" />
+		            	<p:outputLabel value="#{gpsControlController.selectEvent.bussinessName}" />
+		            	<p:spacer />
+		            	<h:commandLink>
+				                <p:graphicImage url="/images/excel.png" width="24" style="margin-bottom: -5px"/>
+				                <p:dataExporter type="xls" target="dtDetalle" fileName="eventos" />
+				            </h:commandLink>
+		            </h:panelGrid>
+		            <h:panelGrid columns="5">
+		            	<p:outputLabel value="ESN:" />
+		            	<p:outputLabel value="#{gpsControlController.selectEvent.esn}" />
+		            	<p:spacer />
+		            	<p:outputLabel value="MARCA:" />
+		            	<p:outputLabel value="#{gpsControlController.selectEvent.gpsType}" />
+		            </h:panelGrid>
+	            	<p:spacer height="10"/>
+					<p:dataTable
+						id="dtDetalle"
+						var="event"
+						style="text-align: center;"
+						scrollable="true" scrollHeight="500"
+						rowStyleClass="#{event.apagado?'colorORANGE':(event.problema?'colorRED':null)}"
+						value="#{gpsControlController.listGpsEvent}"
+						rowIndexVar="index"
+						emptyMessage="0 registros...!!!">
+						<p:column
+							headerText="Nº"
+							style="width:20px;text-align:center;">
+							<p:outputLabel value="#{index + 1}" />
+						</p:column>						
+				        <p:column headerText="routeName">
+				            <h:outputText value="#{event.routeName}" />
+				        </p:column>
+				        <p:column headerText="padron">
+				            <h:outputText value="#{event.padron}" />
+				        </p:column>
+				        <p:column headerText="placa">
+				            <h:outputText value="#{event.placa}" />
+				        </p:column>
+				        <p:column headerText="motor" width="200" style="text-align: left;">
+				            <h:outputText value="#{event.motor}" 
+						style="white-space: nowrap;" />
+				        </p:column>
+				        <p:column headerText="timestamp">
+				            <h:outputText value="#{event.timestampText}" />
+				        </p:column>
+				        <p:column headerText="creationTime">
+				            <h:outputText value="#{event.creationTimeText}" />
+				        </p:column>
+				        <p:column headerText="Enviado-Hace">
+				            <h:outputText value="#{event.diffTime_EpochMin}" />
+				        </p:column>
+				        <p:column headerText="Grabado-Hace">
+				            <h:outputText value="#{event.diffCreation_EpochMin}" />
+				        </p:column>
+				        <p:column headerText="Desface">
+				            <h:outputText value="#{event.diffTime_CreationMin}" />
+				        </p:column>
+				        <p:column headerText="Saltos">
+				            <h:outputText value="#{event.saltos}" />
+				        </p:column>
+				
+					</p:dataTable>
+	
+	       	 	</p:outputPanel>
+       	 	</p:dialog>
+		</h:form>
+
+			</div>
+		</div>
+</h:body>
+</f:view>
+</html>

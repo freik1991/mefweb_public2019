@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es" xml:lang="es">
+
+<f:view>
+	<h:head>
+		<link href="#{request.contextPath}/css/estilos.css" rel="stylesheet"
+			type="text/css" />
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+ .ui-paginator a {
+        margin-right: 5px;
+    }
+    
+body .ui-datatable thead th .ui-column-title {
+	font-weight: bold !important;
+}
+</style>
+	</h:head>
+	<h:body style="margin: 0px;">
+		<div class="ui-g" style="margin: 0px;">
+		<ui:include src="WEB-INF/topbar.xhtml" />
+			<h:form id="frmTipoLo">
+				<div class="ui-g-12">
+					<div class="card" style="height: 100%">
+						<h1 style="font-size: 25px;">Tipo de Local</h1>
+	                   	           						<p:growl id="msgs" showDetail="true" />
+	                   
+						<p:dataTable id="tblTipoLo" var="asist" rowKey="#{asist.idTipoLocal}"
+							value="#{tipoLocalController.lstAdm}" widgetVar="wgTipolocal"
+							rowIndexVar="rowIndex" tableStyle="table-layout: auto;"
+							paginator="false" rows="5"
+							style="font-size: 12px;text-align:center;padding :5px,"
+							selectionMode="single"
+							selection="#{tipoLocalController.selectItemsAdm}"
+                            >						
+						<f:facet name="header">
+							<div class="ui-g">
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-left:0px !important; text-align:left;">
+										<p:commandButton
+											icon="fa fa-refresh"
+											value="Actualizar Lista"
+											style="width: 200px;"
+											oncomplete="PF('wgTipolocal').filter()" />
+										<p:spacer width="30" />
+										<h:outputText value="Buscar (*): " />
+										<p:spacer width="5" />
+											<p:inputText id="globalFilter" style="width:280px"
+												 />
+											<p:spacer width="10px" />
+											<p:watermark for="globalFilter"
+								            value="Buscar por descripción" />
+											<p:commandButton onclick="PF('wgTipolocal').filter()"
+												icon="pi pi-search" />
+										<p:spacer width="5" />
+										<p:commandButton
+											onclick="PF('wgTipolocal').clearFilters()"
+											icon="pi pi-ban" />
+									</p:outputPanel>
+								</div>
+								<div class="ui-g-6">
+									<p:outputPanel style="margin-rigth:0px !important;text-align:right;">
+										<p:commandButton value="Añadir Tipo de local"
+												actionListener="#{tipoLocalController.resetearUser}"
+												update="frmBuscarTipolo"
+												onclick="PF('WGBuscarTipoLo').show();" icon="pi pi-plus"></p:commandButton>
+											<p:commandButton value="Editar" title="edit"
+												icon="pi pi-pencil"
+												actionListener="#{tipoLocalController.habilitarUser}"
+												onclick="PF('WGBuscarTipoLo').show();"
+												update="frmBuscarTipolo" process="@this" />
+											<p:commandButton value="Eliminar" icon="pi pi-trash"
+												action="#{tipoLocalController.deleteAdmin}" update="tblTipoLo" 
+												oncomplete="PF('wgTipolocal').filter()"/>
+											<span class="ui-icon pi pi-ellipsis-v" />
+											<p:commandButton value="Exportar"
+												onclick="PF('WGBuscarTipoLo').show();" icon="pi pi-file"></p:commandButton>
+											<p:commandButton value="Imprimir" title="Print"
+												icon="pi pi-print" />
+										<p:spacer width="20" />
+										
+									</p:outputPanel>
+								</div>
+							</div>
+					    </f:facet>
+					    <p:ajax event="rowSelect"
+								listener="#{tipoLocalController.selectedAdm}"
+								update=":frmTipoLo:msgs,frmBuscarTipolo" />
+							<p:column headerText="Tipo de local" filterBy="#{asist.tipoLocal}" filterMatchMode="contains" filterStyle="display:none;" style="width : 1400px;">
+								<h:outputText value="#{asist.tipoLocal}" />
+							</p:column>
+							<p:column headerText="Acciones">
+								<p:commandButton type="button" title="Print"
+									onclick="PF('WGBuscarTipoLo').show()" icon="pi pi-eye"
+									update=":frmTipoLo:tblTipoLo,frmBuscarTipolo">
+									<f:setPropertyActionListener value="#{asist}"
+										target="#{tipoLocalController.selectItemsAdm}" />
+
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+
+					</div>
+				</div>
+
+			</h:form>
+			<p:dialog id="dlgBuscarTipoLo" header="Tipo de Local"
+				widgetVar="WGBuscarTipoLo" appendTo="@(body)" modal="true"
+				width="400" height="150" showEffect="face" hideEffect="clip"
+				resizable="false" maximizable="false" minimizable="false">
+
+				<h:form id="frmBuscarTipolo">
+					<p:panel header="Datos a ingresar" style="font-size: 13px">
+					
+						<h:panelGrid columns="2" cellpadding="2">	 
+						<p:outputLabel value="Tipo de local:" styleClass="ui-label-text2"></p:outputLabel>    
+						<p:inputText
+								value="#{tipoLocalController.userBean.tipoLocal}" readonly="#{tipoLocalController.disabledUser}"></p:inputText>
+						<p:commandButton value="Guardar" style="margin-top:3px;"
+								actionListener="#{tipoLocalController.evaluarMetodo}"
+								process="frmBuscarTipolo"
+								 global="false"
+								update=":frmTipoLo:tblTipoLo" oncomplete="PF('wgTipolocal').filter()"
+								 onclick="PF('WGBuscarTipoLo').hide();" ></p:commandButton>
+							<p:commandButton value="Cancelar" style="margin-top:3px;" onclick="PF('WGBuscarTipoLo').hide();"></p:commandButton>
+							
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</div>
+	</h:body>
+</f:view>
+</html>
